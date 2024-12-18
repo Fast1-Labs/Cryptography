@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@clerk/clerk-expo": "^2.6.4",
+    "@clerk/react-router": "^0.1.3",
     "@clerk/types": "^4.39.4",
     "@expo/vector-icons": "^14.0.0",
     "@react-native-async-storage/async-storage": "1.23.1",
