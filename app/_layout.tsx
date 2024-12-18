@@ -11,6 +11,7 @@ export default function Layout() {
         tabBarStyle: { backgroundColor: '#121212' },
         tabBarActiveTintColor: colors.primary.main,
         tabBarInactiveTintColor: 'white',
+        tabBarShowLabel: false,
       }}>
       <Tabs.Screen
         name="index"
