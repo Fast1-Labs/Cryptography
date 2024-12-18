@@ -54,15 +54,18 @@ export default function SignUpScreen() {
 
   if (pendingVerification) {
     return (
-      <>
-        <Text>Verify your email</Text>
+      <LinearGradient
+        style={styles.container}
+        colors={['#000000', colors.primary.main, colors.primary.dark]}>
+        <Text style={styles.title}>Verify your email</Text>
         <TextInput
+          style={[styles.textInput, { width: Dimensions.get('window').width / 6 }]}
           value={code}
           placeholder="Enter your verification code"
           onChangeText={(code) => setCode(code)}
         />
-        <Button title="Verify" onPress={onVerifyPress} />
-      </>
+        <Button title="Verify" onPress={onVerifyPress} color="cyan" />
+      </LinearGradient>
     );
   }
 

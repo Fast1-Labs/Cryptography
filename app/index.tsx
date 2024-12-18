@@ -1,4 +1,5 @@
-import { Link } from 'expo-router';
+import { useAuth } from '@clerk/clerk-expo';
+import { Link, Redirect } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { Text, View, StyleSheet, SafeAreaView, Pressable, Image, Dimensions } from 'react-native';
 
@@ -8,6 +9,11 @@ import image from '../assets/bitcoin.png';
 import { colors } from '~/constants/colors';
 
 export default function Page() {
+  const { isSignedIn } = useAuth();
+
+  if (isSignedIn) {
+    return <Redirect href="/(home)" />;
+  }
   return (
     <View style={styles.container}>
       <SafeAreaView style={{ flex: 1 }}>
