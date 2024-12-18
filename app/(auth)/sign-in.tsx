@@ -1,6 +1,7 @@
 import { useSignIn } from '@clerk/clerk-expo';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Link, useRouter } from 'expo-router';
+import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import {
   Text,
@@ -43,7 +44,9 @@ export default function Page() {
   }, [isLoaded, emailAddress, password]);
 
   return (
-    <LinearGradient style={styles.container} colors={['#0b0024', '#093179', '#ffa200']}>
+    <LinearGradient
+      style={styles.container}
+      colors={['#000000', colors.primary.main, colors.primary.dark]}>
       <SafeAreaView style={styles.bodyContainer}>
         <Text style={styles.title}>Sign In</Text>
         <Text style={styles.inputText}>Email</Text>
@@ -65,13 +68,14 @@ export default function Page() {
         <Button title="Sign in" onPress={onSignInPress} color="cyan" />
         <View style={styles.signupContainer}>
           <Text style={styles.bottomText}>Don't have an account?</Text>
-          <Link href="/sign-up">
+          <Link href="/sign-up" asChild>
             <Pressable style={styles.signupButton}>
-              <Text style={styles.signupText}>Sign up</Text>
+              <Text style={styles.signupText}>Sign Up</Text>
             </Pressable>
           </Link>
         </View>
       </SafeAreaView>
+      <StatusBar style="light" />
     </LinearGradient>
   );
 }
@@ -115,12 +119,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   signupButton: {
-    backgroundColor: colors.primary.main,
+    backgroundColor: colors.primary.light,
     padding: 10,
     borderRadius: 10,
+    zIndex: 10,
+    width: Dimensions.get('window').width / 2,
   },
   signupText: {
-    color: colors.primary.light,
+    color: colors.primary.main,
     fontWeight: 'bold',
     textAlign: 'center',
     fontSize: 15,

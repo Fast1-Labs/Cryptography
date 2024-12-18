@@ -1,4 +1,5 @@
 import { Link } from 'expo-router';
+import { StatusBar } from 'expo-status-bar';
 import { Text, View, StyleSheet, SafeAreaView, Pressable, Image, Dimensions } from 'react-native';
 
 //@ts-ignore
@@ -35,6 +36,7 @@ export default function Page() {
           </Pressable>
         </Link>
       </SafeAreaView>
+      <StatusBar style="light" />
     </View>
   );
 }
