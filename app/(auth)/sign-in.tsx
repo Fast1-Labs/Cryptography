@@ -1,4 +1,5 @@
 import { useSignIn } from '@clerk/clerk-expo';
+import { LinearGradient } from 'expo-linear-gradient';
 import { Link, useRouter } from 'expo-router';
 import React from 'react';
 import {
@@ -42,8 +43,9 @@ export default function Page() {
   }, [isLoaded, emailAddress, password]);
 
   return (
-    <View style={styles.container}>
+    <LinearGradient style={styles.container} colors={['#0b0024', '#093179', '#ffa200']}>
       <SafeAreaView style={styles.bodyContainer}>
+        <Text style={styles.title}>Sign In</Text>
         <Text style={styles.inputText}>Email</Text>
         <TextInput
           style={styles.textInput}
@@ -60,7 +62,7 @@ export default function Page() {
           secureTextEntry
           onChangeText={(password) => setPassword(password)}
         />
-        <Button title="Sign in" onPress={onSignInPress} />
+        <Button title="Sign in" onPress={onSignInPress} color="cyan" />
         <View style={styles.signupContainer}>
           <Text style={styles.bottomText}>Don't have an account?</Text>
           <Link href="/sign-up">
@@ -70,7 +72,7 @@ export default function Page() {
           </Link>
         </View>
       </SafeAreaView>
-    </View>
+    </LinearGradient>
   );
 }
 
@@ -80,6 +82,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#121212',
+  },
+  title: {
+    color: colors.primary.light,
+    fontSize: 30,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    paddingBottom: 30,
   },
   bodyContainer: {
     gap: 5,
@@ -99,7 +108,7 @@ const styles = StyleSheet.create({
   bottomText: {
     color: colors.primary.light,
     textAlign: 'center',
-    fontWeight: 'semibold',
+    fontWeight: 'bold',
   },
   signupContainer: {
     gap: 20,

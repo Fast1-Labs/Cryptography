@@ -19,7 +19,7 @@ export default function Page() {
             width: Dimensions.get('window').width,
             height: Dimensions.get('window').height / 2,
             padding: 10,
-            marginTop: 100,
+            marginTop: 70,
           }}
         />
         <View style={styles.body}>
