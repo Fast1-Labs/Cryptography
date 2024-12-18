@@ -1,4 +1,3 @@
-import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { View, StyleSheet, Text, SafeAreaView } from 'react-native';
 
@@ -8,8 +7,9 @@ export default function Home() {
   return (
     <View style={styles.container}>
       <SafeAreaView style={{ flex: 1 }}>
-        <Stack.Screen options={{ headerShown: false }} />
-        <Text style={styles.header}>Crytography</Text>
+        <Text style={styles.header}>
+          Cryto<Text style={{ color: colors.primary.main }}>graphy</Text>
+        </Text>
       </SafeAreaView>
       <StatusBar style="light" />
     </View>
@@ -25,6 +25,6 @@ const styles = StyleSheet.create({
   header: {
     fontSize: 30,
     fontWeight: 'bold',
-    color: colors.primary.main,
+    color: 'white',
   },
 });
