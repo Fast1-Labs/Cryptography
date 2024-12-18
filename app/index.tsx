@@ -11,7 +11,7 @@ export default function Page() {
     <View style={styles.container}>
       <SafeAreaView style={{ flex: 1 }}>
         <Text style={styles.title}>
-          Crypto<Text style={{ color: colors.primary.main }}>Graph</Text>
+          Crypto<Text style={{ color: colors.primary.main }}>Graphy</Text>
         </Text>
         <Image
           source={image}
@@ -25,7 +25,7 @@ export default function Page() {
         <View style={styles.body}>
           <Text style={styles.bodyHeader}>
             Jump start your crypto career with Crypto
-            <Text style={{ color: colors.primary.main }}>Graph</Text>
+            <Text style={{ color: colors.primary.main }}>Graphy</Text>
           </Text>
           <Text style={styles.subText}>Take your investment portfolio to next level</Text>
         </View>
