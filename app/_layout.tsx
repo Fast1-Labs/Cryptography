@@ -1,39 +1,22 @@
-import { FontAwesome } from '@expo/vector-icons';
-import { Tabs } from 'expo-router';
+import { ClerkLoaded, ClerkProvider } from '@clerk/clerk-expo';
+import { Slot } from 'expo-router';
 
-import { colors } from '~/constants/colors';
+import { tokenCache } from '../utils/cache';
 
 export default function Layout() {
+  const publishableKey = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY;
+
+  if (!publishableKey) {
+    throw new Error(
+      'Missing Publishable Key. Please set EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY in your .env'
+    );
+  }
+
   return (
-    <Tabs
-      screenOptions={{
-        headerShown: false,
-        tabBarStyle: { backgroundColor: '#121212' },
-        tabBarActiveTintColor: colors.primary.main,
-        tabBarInactiveTintColor: 'white',
-        tabBarShowLabel: false,
-      }}>
-      <Tabs.Screen
-        name="index"
-        options={{
-          title: 'Home',
-          tabBarIcon: ({ color }) => <FontAwesome name="home" size={25} color={color} />,
-        }}
-      />
-      <Tabs.Screen
-        name="trading"
-        options={{
-          title: 'Trading',
-          tabBarIcon: ({ color }) => <FontAwesome name="money" size={25} color={color} />,
-        }}
-      />
-      <Tabs.Screen
-        name="profile"
-        options={{
-          title: 'Profile',
-          tabBarIcon: ({ color }) => <FontAwesome name="user" size={25} color={color} />,
-        }}
-      />
-    </Tabs>
+    <ClerkProvider tokenCache={tokenCache} key={publishableKey}>
+      <ClerkLoaded>
+        <Slot />
+      </ClerkLoaded>
+    </ClerkProvider>
   );
 }
