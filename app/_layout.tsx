@@ -1,5 +1,6 @@
 import { ClerkLoaded, ClerkProvider } from '@clerk/clerk-expo';
 import { Slot } from 'expo-router';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 import { tokenCache } from '../utils/cache';
 
@@ -15,7 +16,9 @@ export default function Layout() {
   return (
     <ClerkProvider tokenCache={tokenCache} key={publishableKey}>
       <ClerkLoaded>
-        <Slot />
+        <GestureHandlerRootView>
+          <Slot />
+        </GestureHandlerRootView>
       </ClerkLoaded>
     </ClerkProvider>
   );

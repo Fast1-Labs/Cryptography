@@ -57,7 +57,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
   coinSymbol: {
-    color: colors.primary.dark,
+    color: colors.primary.light,
     fontWeight: 'bold',
   },
   priceContainer: {},
