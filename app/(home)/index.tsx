@@ -28,24 +28,24 @@ export default function Home() {
   return (
     <LinearGradient style={styles.container} colors={['#3E1D92', '#1B1030', '#000000']}>
       <SafeAreaView style={{ flex: 1 }}>
-        <ScrollView>
+        <ScrollView showsVerticalScrollIndicator={false}>
           <Text style={styles.header}>
             Cryto<Text style={{ color: colors.primary.main }}>graphy</Text>
           </Text>
           <View style={styles.topContainer}>
             <Text style={styles.topTitle}>Top Winners Today</Text>
             <FlatList
-              data={topGainers}
               scrollEnabled={false}
-              contentContainerStyle={{ gap: 20 }}
+              data={topGainers}
+              contentContainerStyle={{ gap: 10 }}
               renderItem={({ item }) => <Top5 coin={item} />}
             />
           </View>
           <View style={styles.topContainer}>
             <Text style={styles.topTitle}>Top Losers Today</Text>
             <FlatList
-              data={topLosers}
               scrollEnabled={false}
+              data={topLosers}
               renderItem={({ item }) => <Top5 coin={item} />}
               contentContainerStyle={{ gap: 10 }}
             />
@@ -55,13 +55,14 @@ export default function Home() {
             <FlatList
               data={coins}
               keyExtractor={(item) => item.id}
+              scrollEnabled={false}
               contentContainerStyle={{ gap: 10 }}
               renderItem={({ item }) => <CoinListItem coin={item} />}
             />
           </View>
+          <StatusBar style="light" />
         </ScrollView>
       </SafeAreaView>
-      <StatusBar style="light" />
     </LinearGradient>
   );
 }
@@ -78,6 +79,7 @@ const styles = StyleSheet.create({
     color: colors.primary.light,
     fontSize: 20,
     fontWeight: 'bold',
+    paddingVertical: 10,
   },
   header: {
     fontSize: 30,
