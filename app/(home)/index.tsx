@@ -24,7 +24,12 @@ export default function Home() {
         </Text>
         <View style={styles.coinContainer}>
           <Text style={styles.bodyTitle}>Crypto Coins</Text>
-          <FlatList data={coins} renderItem={({ item }) => <CoinListItem coin={item} />} />
+          <FlatList
+            data={coins}
+            keyExtractor={(item) => item.id}
+            contentContainerStyle={{ gap: 10 }}
+            renderItem={({ item }) => <CoinListItem coin={item} />}
+          />
         </View>
       </SafeAreaView>
       <StatusBar style="light" />
