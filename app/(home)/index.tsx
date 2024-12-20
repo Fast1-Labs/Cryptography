@@ -18,7 +18,14 @@ export default function Home() {
     fetchCoins();
   }, []);
 
-  if (loading) return <ActivityIndicator style={{ alignSelf: 'center' }} />;
+  if (loading)
+    return (
+      <ActivityIndicator
+        style={{ alignSelf: 'center', justifyContent: 'center', flex: 1 }}
+        size="large"
+        color={colors.primary.main}
+      />
+    );
   if (error) return <Text>Failed while fetching coins</Text>;
 
   const sortedCoins = [...coins].sort(
@@ -94,7 +101,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#000000',
   },
   topContainer: {
-    padding: 20,
+    padding: 10,
   },
   searchContainer: {
     backgroundColor: '#121212',
@@ -117,6 +124,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
     paddingVertical: 10,
+    paddingHorizontal: 5,
   },
   header: {
     fontSize: 30,
@@ -127,6 +135,7 @@ const styles = StyleSheet.create({
   coinContainer: {
     flex: 1,
     gap: 5,
+    paddingBottom: 10,
   },
   bodyTitle: {
     color: colors.primary.light,
