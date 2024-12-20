@@ -5,18 +5,26 @@ export type Coin = {
   name: string;
   symbol: string;
   price_usd: number;
-  change_24h: any;
+  change_24h: number;
+};
+
+export type HistoricalDataPoint = {
+  timestamp: number;
+  value: number;
 };
 
 export type CoinStore = {
   coins: Coin[];
+  historicalData: Record<string, HistoricalDataPoint[]>;
   loading: boolean;
   error: string | null;
   fetchCoins: () => Promise<void>;
+  fetchHistoricalData: (coinId: string, days: number) => Promise<void>;
 };
 
-export const useCoinStore = create<CoinStore>((set) => ({
+export const useCoinStore = create<CoinStore>((set, get) => ({
   coins: [],
+  historicalData: {},
   loading: false,
   error: null,
 
@@ -36,6 +44,31 @@ export const useCoinStore = create<CoinStore>((set) => ({
     } catch (error) {
       console.log(error);
       set({ error: 'Failed to fetch coins', loading: false });
+    }
+  },
+
+  fetchHistoricalData: async (coinId, days) => {
+    set({ loading: true, error: null });
+    try {
+      const API_URL = `https://api.coingecko.com/api/v3/coins/${coinId}/market_chart?vs_currency=usd&days=${days}`;
+      const response = await fetch(API_URL);
+      const data = await response.json();
+
+      const formattedData = data.prices.map(([timestamp, value]: [number, number]) => ({
+        timestamp,
+        value,
+      }));
+
+      set((state) => ({
+        historicalData: {
+          ...state.historicalData,
+          [coinId]: formattedData,
+        },
+        loading: false,
+      }));
+    } catch (error) {
+      console.log(error);
+      set({ error: 'Failed to fetch historical data', loading: false });
     }
   },
 }));

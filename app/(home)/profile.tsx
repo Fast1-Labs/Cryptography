@@ -1,14 +1,15 @@
-import { SafeAreaView, StyleSheet, Text, View } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
+import { SafeAreaView, StyleSheet, Text } from 'react-native';
 
 import { colors } from '~/constants/colors';
 
 export default function ProfileScreen() {
   return (
-    <View style={styles.container}>
+    <LinearGradient style={styles.container} colors={['#3E1D92', '#1B1030', '#000000']}>
       <SafeAreaView>
         <Text style={styles.title}>Profile</Text>
       </SafeAreaView>
-    </View>
+    </LinearGradient>
   );
 }
 
