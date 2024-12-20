@@ -27,13 +27,14 @@ export default function Home() {
   const topGainers = sortedCoins.slice(0, 5);
   const topLosers = sortedCoins.slice(-5).reverse();
 
-  const searchCoin = (search: string) => {
-    coins.filter((search) => {
-      if (coins.name === search) {
-        return search;
-      }
-    });
-  };
+  // Filter coins based on search query
+  const filteredCoins = search
+    ? coins.filter(
+        (coin) =>
+          coin.name.toLowerCase().includes(search.toLowerCase()) ||
+          coin.symbol.toLowerCase().includes(search.toLowerCase())
+      )
+    : coins;
 
   return (
     <LinearGradient style={styles.container} colors={['#3E1D92', '#1B1030', '#000000']}>
@@ -70,17 +71,12 @@ export default function Home() {
                 value={search}
                 onChangeText={setSearch}
               />
-              <FontAwesome
-                name="search"
-                size={20}
-                color={colors.primary.light}
-                onPress={() => searchCoin(search)}
-              />
+              <FontAwesome name="search" size={20} color={colors.primary.light} />
             </View>
             <FlatList
-              data={coins}
-              keyExtractor={(item) => item.id}
+              data={search ? filteredCoins : coins}
               scrollEnabled={false}
+              keyExtractor={(item) => item.id}
               contentContainerStyle={{ gap: 10 }}
               renderItem={({ item }) => <CoinListItem coin={item} />}
             />
