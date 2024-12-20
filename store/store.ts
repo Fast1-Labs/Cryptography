@@ -5,7 +5,7 @@ export type Coin = {
   name: string;
   symbol: string;
   price_usd: number;
-  change_24h: number;
+  change_24h: any;
 };
 
 export type HistoricalDataPoint = {
