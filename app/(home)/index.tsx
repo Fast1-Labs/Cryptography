@@ -1,8 +1,9 @@
+import { FontAwesome } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { StatusBar } from 'expo-status-bar';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { View, StyleSheet, Text, SafeAreaView, ActivityIndicator, FlatList } from 'react-native';
-import { ScrollView } from 'react-native-gesture-handler';
+import { ScrollView, TextInput } from 'react-native-gesture-handler';
 
 import CoinListItem from '~/components/CoinListItem';
 import Top5 from '~/components/Top5';
@@ -11,6 +12,7 @@ import { useCoinStore } from '~/store/store';
 
 export default function Home() {
   const { coins, loading, error, fetchCoins } = useCoinStore();
+  const [search, setSearch] = useState('');
 
   useEffect(() => {
     fetchCoins();
@@ -24,6 +26,14 @@ export default function Home() {
   );
   const topGainers = sortedCoins.slice(0, 5);
   const topLosers = sortedCoins.slice(-5).reverse();
+
+  const searchCoin = (search: string) => {
+    coins.filter((search) => {
+      if (coins.name === search) {
+        return search;
+      }
+    });
+  };
 
   return (
     <LinearGradient style={styles.container} colors={['#3E1D92', '#1B1030', '#000000']}>
@@ -52,6 +62,21 @@ export default function Home() {
           </View>
           <View style={styles.coinContainer}>
             <Text style={styles.bodyTitle}>Coins</Text>
+            <View style={styles.searchContainer}>
+              <TextInput
+                style={styles.searchInput}
+                placeholder="Enter the name of your coin..."
+                placeholderTextColor={colors.primary.light}
+                value={search}
+                onChangeText={setSearch}
+              />
+              <FontAwesome
+                name="search"
+                size={20}
+                color={colors.primary.light}
+                onPress={() => searchCoin(search)}
+              />
+            </View>
             <FlatList
               data={coins}
               keyExtractor={(item) => item.id}
@@ -75,6 +100,22 @@ const styles = StyleSheet.create({
   topContainer: {
     padding: 20,
   },
+  searchContainer: {
+    backgroundColor: '#121212',
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 5,
+    paddingHorizontal: 10,
+    borderRadius: 10,
+    borderColor: colors.primary.light,
+    borderWidth: 0.5,
+    margin: 10,
+  },
+  searchInput: {
+    padding: 10,
+    flex: 1,
+    color: colors.primary.light,
+  },
   topTitle: {
     color: colors.primary.light,
     fontSize: 20,
@@ -89,6 +130,7 @@ const styles = StyleSheet.create({
   },
   coinContainer: {
     flex: 1,
+    gap: 5,
   },
   bodyTitle: {
     color: colors.primary.light,
