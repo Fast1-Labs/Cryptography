@@ -1,6 +1,6 @@
 import { LinearGradient } from 'expo-linear-gradient';
 import { useEffect, useState } from 'react';
-import { Text, StyleSheet, SafeAreaView, ActivityIndicator, Dimensions } from 'react-native';
+import { Text, StyleSheet, SafeAreaView, ActivityIndicator, Dimensions, View } from 'react-native';
 import { LineGraph, GraphPoint } from 'react-native-graph';
 
 import { colors } from '~/constants/colors';
@@ -10,6 +10,7 @@ export default function Details() {
   const { historicalData, loading, error, fetchHistoricalData } = useCoinStore();
   const [selectedCoin, setSelectedCoin] = useState('bitcoin');
   const [days, setDays] = useState(7);
+  const [point, setPoint] = useState<GraphPoint>();
 
   useEffect(() => {
     fetchHistoricalData(selectedCoin, days);
@@ -23,7 +24,9 @@ export default function Details() {
     date: new Date(point.timestamp),
   }));
 
-  console.log(graphData);
+  const onPointSelected = (point: GraphPoint) => {
+    setPoint(point);
+  };
 
   if (loading)
     return (
@@ -55,10 +58,25 @@ export default function Details() {
           {selectedCoin.toUpperCase()} - Last {days} Days
         </Text>
         {graphData.length > 0 ? (
-          <LineGraph style={styles.graph} points={graphData} animated color={colors.primary.main} />
+          <LineGraph
+            style={styles.graph}
+            points={graphData}
+            animated
+            color={colors.primary.main}
+            gradientFillColors={[colors.primary.dark, '#7476df00']}
+            enablePanGesture
+            indicatorPulsating
+            enableFadeInMask
+            enableIndicator
+            onPointSelected={onPointSelected}
+          />
         ) : (
           <Text style={styles.noDataText}>No data available</Text>
         )}
+        <View style={styles.coinInfoContainer}>
+          <Text style={styles.bodyText}>{point?.date.toDateString()}</Text>
+          <Text style={styles.bodyText}>$ {point?.value.toFixed(4)}</Text>
+        </View>
       </SafeAreaView>
     </LinearGradient>
   );
@@ -78,6 +96,7 @@ const styles = StyleSheet.create({
     color: colors.primary.light,
     fontSize: 20,
     textAlign: 'center',
+    paddingBottom: 10,
   },
   graph: {
     width: Dimensions.get('window').width,
@@ -87,5 +106,13 @@ const styles = StyleSheet.create({
   noDataText: {
     color: 'red',
     textAlign: 'center',
+  },
+  bodyText: {
+    color: colors.primary.light,
+    textAlign: 'center',
+    fontSize: 20,
+  },
+  coinInfoContainer: {
+    gap: 5,
   },
 });
