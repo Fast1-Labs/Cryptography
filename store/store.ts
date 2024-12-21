@@ -42,7 +42,7 @@ export const useCoinStore = create<CoinStore>((set, get) => ({
       }));
       set({ coins: formattedData, loading: false });
     } catch (error) {
-      console.log(error);
+      console.error(error);
       set({ error: 'Failed to fetch coins', loading: false });
     }
   },

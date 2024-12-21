@@ -1,19 +1,35 @@
 import { LinearGradient } from 'expo-linear-gradient';
 import { useEffect, useState } from 'react';
-import { Text, StyleSheet, SafeAreaView, ActivityIndicator, Dimensions, View } from 'react-native';
+import {
+  Text,
+  StyleSheet,
+  SafeAreaView,
+  ActivityIndicator,
+  Dimensions,
+  View,
+  FlatList,
+} from 'react-native';
 import { LineGraph, GraphPoint } from 'react-native-graph';
 
+import Picker from '~/components/Picker';
 import { colors } from '~/constants/colors';
 import { useCoinStore } from '~/store/store';
 
 export default function Details() {
   const { historicalData, loading, error, fetchHistoricalData } = useCoinStore();
+  const { coins, fetchCoins } = useCoinStore();
   const [selectedCoin, setSelectedCoin] = useState('bitcoin');
   const [days, setDays] = useState(7);
   const [point, setPoint] = useState<GraphPoint>();
 
   useEffect(() => {
-    fetchHistoricalData(selectedCoin, days);
+    fetchCoins();
+  }, []);
+
+  useEffect(() => {
+    if (selectedCoin) {
+      fetchHistoricalData(selectedCoin, days);
+    }
   }, [selectedCoin, days]);
 
   const data = historicalData[selectedCoin] || [];
@@ -54,6 +70,12 @@ export default function Details() {
     <LinearGradient style={styles.container} colors={['#3E1D92', '#1B1030', '#000000']}>
       <SafeAreaView>
         <Text style={styles.title}>Trading</Text>
+        <FlatList
+          data={coins}
+          renderItem={({ item }) => <Picker coinName={item.name} />}
+          horizontal
+          contentContainerStyle={{ padding: 20, gap: 10 }}
+        />
         <Text style={styles.coinTitle}>
           {selectedCoin.toUpperCase()} - Last {days} Days
         </Text>
