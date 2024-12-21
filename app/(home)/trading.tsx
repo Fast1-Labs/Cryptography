@@ -1,7 +1,7 @@
 import { LinearGradient } from 'expo-linear-gradient';
 import { useEffect, useState } from 'react';
-import { Text, StyleSheet, SafeAreaView, ActivityIndicator } from 'react-native';
-import { LineGraph } from 'react-native-graph';
+import { Text, StyleSheet, SafeAreaView, ActivityIndicator, Dimensions } from 'react-native';
+import { LineGraph, GraphPoint } from 'react-native-graph';
 
 import { colors } from '~/constants/colors';
 import { useCoinStore } from '~/store/store';
@@ -16,7 +16,14 @@ export default function Details() {
   }, [selectedCoin, days]);
 
   const data = historicalData[selectedCoin] || [];
-  const graphData = data.map((point) => point.value);
+  const graphData = data.map((point) => ({
+    x: new Date(point.timestamp).getTime(),
+    y: point.value,
+    value: point.value,
+    date: new Date(point.timestamp),
+  }));
+
+  console.log(graphData);
 
   if (loading)
     return (
@@ -47,6 +54,11 @@ export default function Details() {
         <Text style={styles.coinTitle}>
           {selectedCoin.toUpperCase()} - Last {days} Days
         </Text>
+        {graphData.length > 0 ? (
+          <LineGraph style={styles.graph} points={graphData} animated color={colors.primary.main} />
+        ) : (
+          <Text style={styles.noDataText}>No data available</Text>
+        )}
       </SafeAreaView>
     </LinearGradient>
   );
@@ -65,6 +77,15 @@ const styles = StyleSheet.create({
   coinTitle: {
     color: colors.primary.light,
     fontSize: 20,
+    textAlign: 'center',
+  },
+  graph: {
+    width: Dimensions.get('window').width,
+    height: Dimensions.get('window').height / 3,
+    padding: 20,
+  },
+  noDataText: {
+    color: 'red',
     textAlign: 'center',
   },
 });
