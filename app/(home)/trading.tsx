@@ -19,8 +19,8 @@ export default function Details() {
   const { historicalData, loading, error, fetchHistoricalData } = useCoinStore();
   const { coins, fetchCoins } = useCoinStore();
   const [selectedCoin, setSelectedCoin] = useState('bitcoin');
-  const [days, setDays] = useState(7);
-  const [point, setPoint] = useState<GraphPoint>();
+  const [days, setDays] = useState(30);
+  const [selectedPoint, setSelectedPoint] = useState<GraphPoint | null>(null);
 
   useEffect(() => {
     fetchCoins();
@@ -33,16 +33,22 @@ export default function Details() {
   }, [selectedCoin, days]);
 
   const data = historicalData[selectedCoin] || [];
-  const graphData = data.map((point) => ({
-    x: new Date(point.timestamp).getTime(),
-    y: point.value,
-    value: point.value,
-    date: new Date(point.timestamp),
-  }));
+  const graphData = data
+    .map((point) => ({
+      x: new Date(point.timestamp).getTime(),
+      y: point.value,
+      value: point.value,
+      date: new Date(point.timestamp),
+    }))
+    .filter((point) => !isNaN(point.x) && !isNaN(point.y));
 
   const onPointSelected = (point: GraphPoint) => {
-    setPoint(point);
+    setSelectedPoint(point);
   };
+
+  useEffect(() => {
+    setSelectedPoint(null);
+  }, [selectedCoin]);
 
   if (loading)
     return (
@@ -72,7 +78,9 @@ export default function Details() {
         <Text style={styles.title}>Trading</Text>
         <FlatList
           data={coins}
-          renderItem={({ item }) => <Picker coinName={item.name} />}
+          renderItem={({ item }) => (
+            <Picker coinName={item.name} onPress={() => setSelectedCoin(item.id)} />
+          )}
           horizontal
           contentContainerStyle={{ padding: 20, gap: 10 }}
         />
@@ -96,8 +104,10 @@ export default function Details() {
           <Text style={styles.noDataText}>No data available</Text>
         )}
         <View style={styles.coinInfoContainer}>
-          <Text style={styles.bodyText}>{point?.date.toDateString()}</Text>
-          <Text style={styles.bodyText}>$ {point?.value.toFixed(4)}</Text>
+          <Text style={styles.bodyText}>
+            {selectedPoint?.date?.toDateString() || 'Select a point'}
+          </Text>
+          <Text style={styles.bodyText}>$ {selectedPoint?.value?.toFixed(4) || '--'}</Text>
         </View>
       </SafeAreaView>
     </LinearGradient>

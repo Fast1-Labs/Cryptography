@@ -2,11 +2,10 @@ import { Text, StyleSheet, Pressable, View } from 'react-native';
 
 import { colors } from '~/constants/colors';
 
-export default function Picker({ coinName }: { coinName: any }) {
-  const onNamePress = ({ coinName }: { coinName: any }) => {};
+export default function Picker({ coinName, onPress }: { coinName: any; onPress: () => void }) {
   return (
     <View style={styles.container}>
-      <Pressable style={styles.coinContainer} onPress={() => onNamePress(coinName)}>
+      <Pressable style={styles.coinContainer} onPress={onPress}>
         <Text style={styles.coinName}>{coinName.toUpperCase()}</Text>
       </Pressable>
     </View>
