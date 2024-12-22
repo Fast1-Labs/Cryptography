@@ -109,6 +109,31 @@ export default function Details() {
           </Text>
           <Text style={styles.bodyText}>$ {selectedPoint?.value?.toFixed(4) || '--'}</Text>
         </View>
+        <View style={styles.informationTable}>
+          {/* Coin Information */}
+          <Text style={styles.sectionTitle}>Coin Details</Text>
+          <Text style={styles.informationText}>
+            High: ${Math.max(...graphData.map((point) => point.value)).toFixed(2) || '--'}
+          </Text>
+          <Text style={styles.informationText}>
+            Low: ${Math.min(...graphData.map((point) => point.value)).toFixed(2) || '--'}
+          </Text>
+          <Text style={styles.informationText}>
+            Average: $
+            {(graphData.reduce((sum, point) => sum + point.value, 0) / graphData.length).toFixed(
+              2
+            ) || '--'}
+          </Text>
+          <Text style={styles.informationText}>
+            Performance Change:{' '}
+            {(
+              ((graphData[graphData.length - 1]?.value - graphData[0]?.value) /
+                graphData[0]?.value) *
+                100 || 0
+            ).toFixed(2)}
+            %
+          </Text>
+        </View>
       </SafeAreaView>
     </LinearGradient>
   );
@@ -146,5 +171,22 @@ const styles = StyleSheet.create({
   },
   coinInfoContainer: {
     gap: 5,
+  },
+  informationTable: {
+    padding: 20,
+    backgroundColor: colors.primary.dark,
+    margin: 20,
+    borderRadius: 10,
+  },
+  sectionTitle: {
+    fontSize: 18,
+    color: colors.primary.light,
+    fontWeight: 'bold',
+    marginTop: 5,
+  },
+  informationText: {
+    fontSize: 16,
+    color: colors.primary.light,
+    marginVertical: 2,
   },
 });

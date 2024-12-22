@@ -51,8 +51,15 @@ export const useCoinStore = create<CoinStore>((set, get) => ({
     set({ loading: true, error: null });
     try {
       const API_URL = `https://api.coingecko.com/api/v3/coins/${coinId}/market_chart?vs_currency=usd&days=${days}`;
+      console.log('Fetching from URL:', API_URL);
+
       const response = await fetch(API_URL);
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
       const data = await response.json();
+      console.log('Response data:', data);
 
       const formattedData = data.prices.map(([timestamp, value]: [number, number]) => ({
         timestamp,
@@ -67,7 +74,7 @@ export const useCoinStore = create<CoinStore>((set, get) => ({
         loading: false,
       }));
     } catch (error) {
-      console.log(error);
+      console.error('Error fetching historical data:', error);
       set({ error: 'Failed to fetch historical data', loading: false });
     }
   },
