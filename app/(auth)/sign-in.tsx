@@ -2,7 +2,7 @@ import { useSignIn } from '@clerk/clerk-expo';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Link, useRouter } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Text,
   TextInput,
@@ -19,9 +19,9 @@ import { colors } from '~/constants/colors';
 export default function Page() {
   const { signIn, setActive, isLoaded } = useSignIn();
   const router = useRouter();
-
   const [emailAddress, setEmailAddress] = React.useState('');
   const [password, setPassword] = React.useState('');
+  const [error, setError] = useState('');
 
   const onSignInPress = React.useCallback(async () => {
     if (!isLoaded) return;
@@ -37,6 +37,7 @@ export default function Page() {
         router.replace('/');
       } else {
         console.error(JSON.stringify(signInAttempt, null, 2));
+        setError('Invalid email or password. Please try again.');
       }
     } catch (err) {
       console.error(JSON.stringify(err, null, 2));
@@ -65,6 +66,7 @@ export default function Page() {
           secureTextEntry
           onChangeText={(password) => setPassword(password)}
         />
+        {error && <Text style={styles.errorMessage}>{error}</Text>}
         <Button title="Sign in" onPress={onSignInPress} color="cyan" />
         <View style={styles.signupContainer}>
           <Text style={styles.bottomText}>Don't have an account?</Text>
@@ -130,5 +132,10 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'center',
     fontSize: 15,
+  },
+  errorMessage: {
+    color: colors.secondary.accent,
+    fontSize: 15,
+    fontWeight: 'bold',
   },
 });
