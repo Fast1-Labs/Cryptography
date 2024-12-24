@@ -19,6 +19,7 @@ export default function Details() {
   const { historicalData, loading, error, fetchHistoricalData } = useCoinStore();
   const { coins, fetchCoins } = useCoinStore();
   const [selectedCoin, setSelectedCoin] = useState('bitcoin');
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [days, setDays] = useState(30);
   const [selectedPoint, setSelectedPoint] = useState<GraphPoint | null>(null);
 
@@ -173,9 +174,9 @@ const styles = StyleSheet.create({
     gap: 5,
   },
   informationTable: {
-    padding: 20,
+    padding: 10,
     backgroundColor: colors.primary.dark,
-    margin: 20,
+    margin: 15,
     borderRadius: 10,
   },
   sectionTitle: {
