@@ -92,6 +92,9 @@ export default function SignUpScreen() {
           secureTextEntry
           onChangeText={(password) => setPassword(password)}
         />
+        {password.length < 8 && (
+          <Text style={styles.warningMessage}>Password must be minimum of 8 characters!</Text>
+        )}
         <Button title="Continue" onPress={onSignUpPress} color="cyan" />
       </SafeAreaView>
       <StatusBar style="light" />
@@ -127,5 +130,10 @@ const styles = StyleSheet.create({
     color: colors.primary.light,
     fontWeight: 'bold',
     paddingLeft: 20,
+  },
+  warningMessage: {
+    color: colors.secondary.accent,
+    fontSize: 15,
+    fontWeight: 'bold',
   },
 });
