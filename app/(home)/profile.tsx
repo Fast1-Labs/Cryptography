@@ -10,8 +10,12 @@ export default function ProfileScreen() {
   const { user } = useUser();
   const { signOut } = useClerk();
   const { password, setPassword } = useState('');
+  const { confirmPassword, setConfirmPassword } = useState('');
 
   const handleChangePassword = async () => {
+    if (password !== confirmPassword) {
+      return;
+    }
     try {
       await user?.updatePassword(password);
     } catch (error) {
@@ -31,13 +35,26 @@ export default function ProfileScreen() {
           <Text style={styles.infoTitle}>Password:</Text>
           <TextInput
             style={styles.infoText}
-            placeholder="New Password..."
+            placeholder="Enter New Password..."
+            value={password}
             secureTextEntry
             onChangeText={setPassword}
             placeholderTextColor="white"
           />
-          <Button title="Update" onPress={handleChangePassword} />
         </View>
+        <View style={styles.infoContainer}>
+          <Text style={styles.infoTitle}>Confirm Password:</Text>
+          <TextInput
+            style={styles.infoText}
+            placeholder="Confirm New Password..."
+            value={confirmPassword}
+            secureTextEntry
+            onChangeText={setConfirmPassword}
+            placeholderTextColor="white"
+          />
+        </View>
+        <Button title="Update Password" onPress={handleChangePassword} />
+        <Button title="Delete User" onPress={() => {}} color="red" />
         <Button title="Sign Out" onPress={() => signOut()} />
       </SafeAreaView>
     </LinearGradient>
@@ -47,6 +64,7 @@ export default function ProfileScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    padding: 5,
   },
   title: {
     fontSize: 30,

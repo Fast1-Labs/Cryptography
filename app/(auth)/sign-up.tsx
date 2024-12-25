@@ -59,7 +59,7 @@ export default function SignUpScreen() {
         colors={['#000000', colors.primary.main, colors.primary.dark]}>
         <Text style={styles.title}>Verify your email</Text>
         <TextInput
-          style={[styles.textInput, { width: Dimensions.get('window').width / 6 }]}
+          style={[styles.textInput, { width: Dimensions.get('window').width / 3 }]}
           value={code}
           placeholder="Enter your verification code"
           onChangeText={(code) => setCode(code)}
@@ -133,7 +133,8 @@ const styles = StyleSheet.create({
   },
   warningMessage: {
     color: colors.secondary.accent,
-    fontSize: 15,
+    fontSize: 12,
+    textAlign: 'center',
     fontWeight: 'bold',
   },
 });
