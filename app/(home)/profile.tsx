@@ -1,8 +1,8 @@
-import { useClerk, useUser } from '@clerk/clerk-expo';
+import { Clerk, useClerk, useUser } from '@clerk/clerk-expo';
 import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
 import { useState } from 'react';
-import { Button, SafeAreaView, StyleSheet, Text, View } from 'react-native';
+import { Alert, Button, SafeAreaView, StyleSheet, Text, View } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
 
 import { colors } from '~/constants/colors';
@@ -10,25 +10,42 @@ import { colors } from '~/constants/colors';
 export default function ProfileScreen() {
   const { user } = useUser();
   const { signOut } = useClerk();
-  const { password, setPassword } = useState('');
-  const { confirmPassword, setConfirmPassword } = useState('');
+  const [currentPassword, setCurrentPassword] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
 
   const handleChangePassword = async () => {
+    if (!currentPassword || !password || !confirmPassword) {
+      Alert.alert('Error', 'Please fill out all password fields.');
+      return;
+    }
     if (password !== confirmPassword) {
+      Alert.alert('Error', 'Passwords do not match.');
       return;
     }
     try {
-      await user?.updatePassword(password);
-    } catch (error) {
+      await user?.updatePassword({
+        currentPassword,
+        newPassword: password,
+      });
+      Alert.alert('Success', 'Password updated successfully!');
+      setCurrentPassword('');
+      setPassword('');
+      setConfirmPassword('');
+    } catch (error: any) {
       console.error(error);
+      Alert.alert('Error', error.message || 'Failed to update password.');
     }
   };
 
   const handleDeleteUser = async () => {
     try {
       await user?.delete();
-    } catch (error) {
-      console.log(error);
+      Alert.alert('Account Deleted', 'Your account has been deleted successfully.');
+      router.push('/(auth)/sign-in');
+    } catch (error: any) {
+      console.error(error);
+      Alert.alert('Error', error.message || 'Failed to delete account.');
     }
   };
 
@@ -36,14 +53,28 @@ export default function ProfileScreen() {
     <LinearGradient style={styles.container} colors={['#3E1D92', '#1B1030', '#000000']}>
       <SafeAreaView>
         <Text style={styles.title}>Profile</Text>
+
         <View style={styles.infoContainer}>
-          <Text style={styles.infoTitle}>Email Adress:</Text>
+          <Text style={styles.infoTitle}>Email Address:</Text>
           <Text style={styles.infoText}>{user?.primaryEmailAddress?.emailAddress}</Text>
         </View>
+
         <View style={styles.infoContainer}>
-          <Text style={styles.infoTitle}>Password:</Text>
+          <Text style={styles.infoTitle}>Current Password:</Text>
           <TextInput
-            style={styles.infoText}
+            style={styles.input}
+            placeholder="Enter Current Password..."
+            value={currentPassword}
+            secureTextEntry
+            onChangeText={setCurrentPassword}
+            placeholderTextColor="white"
+          />
+        </View>
+
+        <View style={styles.infoContainer}>
+          <Text style={styles.infoTitle}>New Password:</Text>
+          <TextInput
+            style={styles.input}
             placeholder="Enter New Password..."
             value={password}
             secureTextEntry
@@ -51,10 +82,11 @@ export default function ProfileScreen() {
             placeholderTextColor="white"
           />
         </View>
+
         <View style={styles.infoContainer}>
           <Text style={styles.infoTitle}>Confirm Password:</Text>
           <TextInput
-            style={styles.infoText}
+            style={styles.input}
             placeholder="Confirm New Password..."
             value={confirmPassword}
             secureTextEntry
@@ -62,16 +94,22 @@ export default function ProfileScreen() {
             placeholderTextColor="white"
           />
         </View>
-        <Button title="Update Password" onPress={handleChangePassword} />
-        <Button
-          title="Delete User"
-          onPress={() => {
-            handleDeleteUser();
-            router.push('/(auth)/sign-in');
-          }}
-          color="red"
-        />
-        <Button title="Sign Out" onPress={() => signOut()} />
+
+        <View style={styles.buttonContainer}>
+          <Button
+            title="Update Password"
+            onPress={handleChangePassword}
+            color={colors.primary.light}
+          />
+        </View>
+
+        <View style={styles.buttonContainer}>
+          <Button title="Delete User" onPress={handleDeleteUser} color="red" />
+        </View>
+
+        <View style={styles.buttonContainer}>
+          <Button title="Sign Out" onPress={() => signOut()} color={colors.primary.light} />
+        </View>
       </SafeAreaView>
     </LinearGradient>
   );
@@ -94,6 +132,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     flexDirection: 'row',
     padding: 10,
+    marginVertical: 8,
   },
   infoTitle: {
     color: colors.primary.light,
@@ -105,5 +144,16 @@ const styles = StyleSheet.create({
     color: colors.primary.light,
     fontSize: 16,
     flex: 1,
+  },
+  input: {
+    flex: 1,
+    fontSize: 16,
+    color: colors.primary.light,
+    borderBottomWidth: 1,
+    borderColor: colors.primary.light,
+    padding: 5,
+  },
+  buttonContainer: {
+    marginVertical: 10,
   },
 });
