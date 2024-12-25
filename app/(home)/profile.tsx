@@ -1,4 +1,4 @@
-import { Clerk, useClerk, useUser } from '@clerk/clerk-expo';
+import { useClerk, useUser } from '@clerk/clerk-expo';
 import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
 import { useState } from 'react';

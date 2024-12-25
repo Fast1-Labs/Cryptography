@@ -1,4 +1,5 @@
-import { useSignIn } from '@clerk/clerk-expo';
+import { useOAuth, useSignIn } from '@clerk/clerk-expo';
+import { FontAwesome } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Link, useRouter } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
@@ -18,6 +19,7 @@ import { colors } from '~/constants/colors';
 
 export default function Page() {
   const { signIn, setActive, isLoaded } = useSignIn();
+  const { startOAuthFlow: googleAuth } = useOAuth({ strategy: 'oauth_google' });
   const router = useRouter();
   const [emailAddress, setEmailAddress] = React.useState('');
   const [password, setPassword] = React.useState('');
@@ -44,6 +46,26 @@ export default function Page() {
     }
   }, [isLoaded, emailAddress, password]);
 
+  const handleGoogleAuth = React.useCallback(async () => {
+    try {
+      const { createdSessionId, setActive } = await googleAuth();
+
+      if (!setActive) {
+        throw new Error('setActive is not defined');
+      }
+
+      if (createdSessionId) {
+        await setActive({ session: createdSessionId });
+        router.push('/(home)');
+      } else {
+        throw new Error('Google sign-in failed to create a session.');
+      }
+    } catch (error) {
+      console.error('Error while logging in with Google', error);
+      setError('Google sign-in failed. Please try again.');
+    }
+  }, [googleAuth, setActive, router]);
+
   return (
     <LinearGradient
       style={styles.container}
@@ -67,6 +89,10 @@ export default function Page() {
           onChangeText={(password) => setPassword(password)}
         />
         {error && <Text style={styles.errorMessage}>{error}</Text>}
+        <Pressable style={styles.googleButton} onPress={handleGoogleAuth}>
+          <Text style={styles.signInGoogleText}>Sign in with Google</Text>
+          <FontAwesome name="google" size={20} color="black" />
+        </Pressable>
         <Button title="Sign in" onPress={onSignInPress} color="cyan" />
         <View style={styles.signupContainer}>
           <Text style={styles.bottomText}>Don't have an account?</Text>
@@ -135,6 +161,22 @@ const styles = StyleSheet.create({
   },
   errorMessage: {
     color: colors.secondary.accent,
+    fontSize: 15,
+    fontWeight: 'bold',
+  },
+  googleButton: {
+    flexDirection: 'row',
+    backgroundColor: colors.primary.light,
+    padding: 10,
+    borderRadius: 10,
+    marginVertical: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 10,
+    width: Dimensions.get('window').width / 2,
+    alignSelf: 'center',
+  },
+  signInGoogleText: {
     fontSize: 15,
     fontWeight: 'bold',
   },

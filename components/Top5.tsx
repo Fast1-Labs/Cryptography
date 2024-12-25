@@ -17,7 +17,7 @@ export default function Top5({ coin }: { coin: Coin }) {
                 ? { color: colors.secondary.main }
                 : { color: colors.secondary.accent },
             ]}>
-            {coin.change_24h.toFixed(4)}
+            % {coin.change_24h.toFixed(4)}
           </Text>
         </View>
       </View>
