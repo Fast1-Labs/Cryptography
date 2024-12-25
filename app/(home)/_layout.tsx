@@ -1,9 +1,16 @@
+import { useAuth } from '@clerk/clerk-expo';
 import { FontAwesome } from '@expo/vector-icons';
+import { Redirect } from 'expo-router';
 import { Tabs } from 'expo-router/tabs';
 
 import { colors } from '~/constants/colors';
 
 export default function Layout() {
+  const { isSignedIn } = useAuth();
+
+  if (!isSignedIn) {
+    return <Redirect href="/(auth)/sign-in" />;
+  }
   return (
     <Tabs
       screenOptions={{

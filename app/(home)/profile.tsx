@@ -1,5 +1,6 @@
 import { useClerk, useUser } from '@clerk/clerk-expo';
 import { LinearGradient } from 'expo-linear-gradient';
+import { router } from 'expo-router';
 import { useState } from 'react';
 import { Button, SafeAreaView, StyleSheet, Text, View } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
@@ -20,6 +21,14 @@ export default function ProfileScreen() {
       await user?.updatePassword(password);
     } catch (error) {
       console.error(error);
+    }
+  };
+
+  const handleDeleteUser = async () => {
+    try {
+      await user?.delete();
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -54,7 +63,14 @@ export default function ProfileScreen() {
           />
         </View>
         <Button title="Update Password" onPress={handleChangePassword} />
-        <Button title="Delete User" onPress={() => {}} color="red" />
+        <Button
+          title="Delete User"
+          onPress={() => {
+            handleDeleteUser();
+            router.push('/(auth)/sign-in');
+          }}
+          color="red"
+        />
         <Button title="Sign Out" onPress={() => signOut()} />
       </SafeAreaView>
     </LinearGradient>
