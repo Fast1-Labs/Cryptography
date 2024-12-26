@@ -9,15 +9,19 @@ import {
   ScrollView,
   TextInput,
 } from 'react-native';
+import { useDispatch } from 'react-redux';
 
 import MyCoinsListItem from './MyCoinsListItem';
 
 import { colors } from '~/constants/colors';
-import { useCoinStore } from '~/store/store';
+import { addCoin, removeCoin, updateCoin } from '~/slices/coinSlice';
+import { Coin, useCoinStore } from '~/store/store';
 
 export default function MyTokenListItem() {
   const { coins, loading, error, fetchCoins } = useCoinStore();
   const [search, setSearch] = useState('');
+  const [userCoins, setUserCoins] = useState<Coin[]>([]);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     fetchCoins();
@@ -38,6 +42,16 @@ export default function MyTokenListItem() {
   if (error) {
     return <Text style={styles.errorText}>Error while fetching coins...</Text>;
   }
+
+  const addToCoins = async ({ name, amount }: { name: string; amount: number }) => {
+    dispatch(addCoin({ name, amount }));
+  };
+  const handleUpdateCoin = async ({ name, amount }: { name: string; amount: number }) => {
+    dispatch(updateCoin({ name, amount }));
+  };
+  const handleRemoveCoin = async (name: string) => {
+    dispatch(removeCoin(name));
+  };
 
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
