@@ -35,6 +35,13 @@ export default function Layout() {
         }}
       />
       <Tabs.Screen
+        name="mytokens"
+        options={{
+          title: 'My Tokens',
+          tabBarIcon: ({ color }) => <FontAwesome name="bitcoin" size={25} color={color} />,
+        }}
+      />
+      <Tabs.Screen
         name="profile"
         options={{
           title: 'Profile',
