@@ -9,9 +9,7 @@ export default function MyTokens() {
     <LinearGradient style={styles.container} colors={['#3E1D92', '#1B1030', '#000000']}>
       <SafeAreaView style={{ flex: 1 }}>
         <Text style={styles.title}>My Tokens</Text>
-        <View style={styles.bodyContainer}>
-          <MyTokenListItem />
-        </View>
+        <View style={styles.bodyContainer}>{/* <MyTokenListItem />*/}</View>
       </SafeAreaView>
     </LinearGradient>
   );
