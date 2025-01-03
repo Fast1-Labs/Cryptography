@@ -3,14 +3,26 @@ import { useState } from 'react';
 import { View, Text, StyleSheet, SafeAreaView, ActivityIndicator, Button } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
 
+import CoinListItem from '~/components/CoinListItem';
 import { colors } from '~/constants/colors';
 import { useCoinStore } from '~/store/store';
 
 export default function InvestmentsScreen() {
   const { coins, loading, error, fetchCoins } = useCoinStore();
   const [search, setSearch] = useState('');
+  const [searchedCoin, setSearchedCoin] = useState();
 
-  const handleSearch = async (search: string) => {};
+  const handleSearch = async (search: string) => {
+    try {
+      fetchCoins();
+      const searchedCoin = coins.filter((coin) =>
+        coin.name.toLowerCase().includes(search.toLowerCase())
+      );
+      setSearchedCoin(searchedCoin);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   if (loading) return <ActivityIndicator />;
   if (error) return <Text style={{ color: 'red', fontSize: 20, fontWeight: 'bold' }}>{error}</Text>;
@@ -31,6 +43,7 @@ export default function InvestmentsScreen() {
             />
             <Button title="Search" onPress={() => handleSearch(search)} />
           </View>
+          {search && <CoinListItem coin={searchedCoin} />}
         </SafeAreaView>
       </LinearGradient>
     </View>
