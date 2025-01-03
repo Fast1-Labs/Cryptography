@@ -28,17 +28,17 @@ export default function Layout() {
         }}
       />
       <Tabs.Screen
-        name="trading"
-        options={{
-          title: 'Trading',
-          tabBarIcon: ({ color }) => <FontAwesome name="money" size={25} color={color} />,
-        }}
-      />
-      <Tabs.Screen
         name="investments"
         options={{
           title: 'Investments',
           tabBarIcon: ({ color }) => <FontAwesome name="bitcoin" size={25} color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="trading"
+        options={{
+          title: 'Trading',
+          tabBarIcon: ({ color }) => <FontAwesome name="money" size={25} color={color} />,
         }}
       />
       <Tabs.Screen
