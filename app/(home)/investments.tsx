@@ -14,7 +14,14 @@ export default function InvestmentsScreen() {
     fetchCoins();
   }, []);
 
-  const handleSearch = (search: string) => {};
+  const handleSearch = (search: string) => {
+    const searchedCoin = coins.find(
+      (coin) =>
+        coin.name.toLowerCase() === search.toLowerCase() ||
+        coin.symbol.toLowerCase() === search.toLowerCase()
+    );
+    return searchedCoin;
+  };
 
   if (loading) return <ActivityIndicator />;
   if (error) return <Text style={{ color: 'red', fontSize: 20, fontWeight: 'bold' }}>{error}</Text>;
