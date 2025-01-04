@@ -1,6 +1,14 @@
 import { LinearGradient } from 'expo-linear-gradient';
 import { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, SafeAreaView, ActivityIndicator, Button } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  SafeAreaView,
+  ActivityIndicator,
+  Button,
+  Alert,
+} from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
 
 import { colors } from '~/constants/colors';
@@ -10,6 +18,9 @@ export default function InvestmentsScreen() {
   const { coins, loading, error, fetchCoins } = useCoinStore();
   const [search, setSearch] = useState('');
   const [coin, setCoin] = useState<Coin>();
+  const [amount, setAmount] = useState('');
+  const [wallet, setWallet] = useState<Coin[] | []>([]);
+  const [balance, setBalance] = useState(0);
 
   useEffect(() => {
     fetchCoins();
@@ -24,7 +35,18 @@ export default function InvestmentsScreen() {
     setCoin(searchedCoin);
   };
 
-  const addToWallet = () => {};
+  const addToWallet = () => {
+    if (!amount || amount <= '0') {
+      Alert.alert('Invalid amount');
+      return;
+    }
+    const newCoin = { ...coin, amount };
+
+    setWallet(...wallet, newCoin);
+    setAmount('');
+    setSearch('');
+    setCoin(undefined);
+  };
 
   if (loading) return <ActivityIndicator />;
   if (error) return <Text style={{ color: 'red', fontSize: 20, fontWeight: 'bold' }}>{error}</Text>;
@@ -60,6 +82,11 @@ export default function InvestmentsScreen() {
               <Button title="Add" onPress={addToWallet} />
             </View>
           )}
+          {/* Total Balance of User */}
+          <View style={styles.balanceContainer}>
+            <Text style={styles.balanceText}>Total Balance $: </Text>
+          </View>
+          {/* List of Wallet Items */}
         </SafeAreaView>
       </LinearGradient>
     </View>
@@ -103,5 +130,13 @@ const styles = StyleSheet.create({
     color: colors.primary.light,
     fontSize: 16,
     fontWeight: 'semibold',
+  },
+  balanceContainer: {
+    padding: 20,
+    alignItems: 'center',
+  },
+  balanceText: {
+    color: colors.primary.light,
+    fontSize: 20,
   },
 });
