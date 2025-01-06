@@ -80,6 +80,16 @@ export const useCoinStore = create<CoinStore>((set, get) => ({
       wallet: [...state.wallet, { coin, quantity }],
     }));
   },
+  removeFromWallet: (coin: Coin, quantity: number) => {
+    set((state) => {
+      const updatedWallet = state.wallet
+        .map((item) =>
+          item.coin.id === coin.id ? { ...item, quantity: item.quantity - quantity } : item
+        )
+        .filter((item) => item.quantity > 0);
+      return { ...state, wallet: updatedWallet };
+    });
+  },
 
   calculateTotalBalance: () => {
     const { wallet } = get();

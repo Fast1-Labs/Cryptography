@@ -7,9 +7,10 @@ import { colors } from '~/constants/colors';
 import { Coin, useCoinStore } from '~/store/store';
 
 export default function InvestmentsScreen() {
-  const { coins, loading, error, fetchCoins } = useCoinStore();
+  const { coins, loading, error, fetchCoins, calculateTotalBalance, wallet } = useCoinStore();
   const [search, setSearch] = useState('');
   const [coin, setCoin] = useState<Coin | null>(null);
+  const [quantity, setQuantity] = useState('');
 
   useEffect(() => {
     fetchCoins();
@@ -26,10 +27,33 @@ export default function InvestmentsScreen() {
 
   const addToWallet = () => {
     if (coin) {
-      const quantity = parseFloat(prompt('Enter quantity of coins:') || '0');
-      if (quantity > 0) {
-        useCoinStore.getState().addToWallet(coin, quantity);
-        alert(`${quantity} ${coin.name} added to your wallet.`);
+      const parsedQuantity = parseFloat(quantity) || 0;
+      if (parsedQuantity > 0) {
+        useCoinStore.getState().addToWallet(coin, parsedQuantity);
+        alert(`${parsedQuantity} ${coin.name} added to your wallet.`);
+        setQuantity('');
+      } else {
+        alert('Invalid quantity.');
+      }
+    }
+  };
+
+  const removeFromWallet = () => {
+    if (coin) {
+      const parsedQuantity = parseFloat(quantity) || 0;
+      const walletItem = wallet.find((item) => item.coin.id === coin.id);
+
+      if (!walletItem) {
+        alert(`You don't have any ${coin.name} in your wallet.`);
+        return;
+      }
+
+      if (parsedQuantity > 0 && parsedQuantity <= walletItem.quantity) {
+        useCoinStore.getState().removeFromWallet(coin, parsedQuantity);
+        alert(`${parsedQuantity} ${coin.name} removed from your wallet.`);
+        setQuantity('');
+      } else if (parsedQuantity > walletItem.quantity) {
+        alert(`You don't have enough ${coin.name} to remove that quantity.`);
       } else {
         alert('Invalid quantity.');
       }
@@ -67,14 +91,36 @@ export default function InvestmentsScreen() {
                 }}>
                 % {coin.change_24h.toFixed(4)}
               </Text>
+              <TextInput
+                value={quantity}
+                onChangeText={setQuantity}
+                placeholder="0"
+                placeholderTextColor="white"
+                style={{ color: colors.primary.light }}
+              />
               <Button title="Add" onPress={addToWallet} />
             </View>
           )}
           {/* Total Balance of User */}
           <View style={styles.balanceContainer}>
-            <Text style={styles.balanceText}>Total Balance $: </Text>
+            <Text style={styles.balanceText}>
+              Total Balance $: {calculateTotalBalance().toFixed(2)}
+            </Text>
           </View>
+
           {/* List of Wallet Items */}
+          <View>
+            {wallet.map((item, index) => (
+              <View key={index} style={styles.walletItem}>
+                <Text style={styles.walletText}>
+                  {item.coin.name} ({item.coin.symbol}): {item.quantity} coins
+                </Text>
+                <Text style={styles.walletText}>
+                  Value: ${(item.coin.price_usd * item.quantity).toFixed(2)}
+                </Text>
+              </View>
+            ))}
+          </View>
         </SafeAreaView>
       </LinearGradient>
     </View>
@@ -126,5 +172,16 @@ const styles = StyleSheet.create({
   balanceText: {
     color: colors.primary.light,
     fontSize: 20,
+  },
+  walletItem: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    padding: 10,
+    borderBottomWidth: 1,
+    borderColor: colors.primary.light,
+  },
+  walletText: {
+    color: colors.primary.light,
+    fontSize: 16,
   },
 });
