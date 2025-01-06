@@ -24,7 +24,17 @@ export default function InvestmentsScreen() {
     setCoin(searchedCoin || null);
   };
 
-  const addToWallet = () => {};
+  const addToWallet = () => {
+    if (coin) {
+      const quantity = parseFloat(prompt('Enter quantity of coins:') || '0');
+      if (quantity > 0) {
+        useCoinStore.getState().addToWallet(coin, quantity);
+        alert(`${quantity} ${coin.name} added to your wallet.`);
+      } else {
+        alert('Invalid quantity.');
+      }
+    }
+  };
 
   if (loading) return <ActivityIndicator />;
   if (error) return <Text style={{ color: 'red', fontSize: 20, fontWeight: 'bold' }}>{error}</Text>;

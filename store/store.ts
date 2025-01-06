@@ -86,3 +86,4 @@ export const useCoinStore = create<CoinStore>((set, get) => ({
     return wallet.reduce((total, item) => total + item.coin.price_usd * item.quantity, 0);
   },
 }));
+export { Coin };
