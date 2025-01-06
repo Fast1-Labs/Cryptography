@@ -1,33 +1,30 @@
 import { create } from 'zustand';
 
-export type Coin = {
-  id: string;
-  name: string;
-  symbol: string;
-  price_usd: number;
-  change_24h: any;
-};
+import { Coin, HistoricalDataPoint } from '~/types/types';
 
-export type HistoricalDataPoint = {
-  timestamp: number;
-  value: number;
+export type WalletItem = {
+  coin: Coin;
+  quantity: number;
 };
 
 export type CoinStore = {
   coins: Coin[];
+  wallet: WalletItem[];
   historicalData: Record<string, HistoricalDataPoint[]>;
   loading: boolean;
   error: string | null;
   fetchCoins: () => Promise<void>;
   fetchHistoricalData: (coinId: string, days: number) => Promise<void>;
+  addToWallet: (coin: Coin, quantity: number) => void;
+  calculateTotalBalance: () => number;
 };
 
 export const useCoinStore = create<CoinStore>((set, get) => ({
   coins: [],
+  wallet: [],
   historicalData: {},
   loading: false,
   error: null,
-
   fetchCoins: async () => {
     set({ loading: true, error: null });
     try {
@@ -77,5 +74,15 @@ export const useCoinStore = create<CoinStore>((set, get) => ({
       console.error('Error fetching historical data:', error);
       set({ error: 'Failed to fetch historical data', loading: false });
     }
+  },
+  addToWallet: (coin, quantity) => {
+    set((state) => ({
+      wallet: [...state.wallet, { coin, quantity }],
+    }));
+  },
+
+  calculateTotalBalance: () => {
+    const { wallet } = get();
+    return wallet.reduce((total, item) => total + item.coin.price_usd * item.quantity, 0);
   },
 }));

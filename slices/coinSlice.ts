@@ -3,6 +3,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 interface Coin {
   name: string;
   amount: number;
+  price_usd: string;
 }
 
 interface CoinState {

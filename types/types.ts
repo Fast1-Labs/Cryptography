@@ -2,8 +2,14 @@ export interface Coin {
   id: string;
   name: string;
   symbol: string;
-  price: number;
+  price_usd: number;
   change_24h: string;
+  market_cap?: number;
+  volume_24h?: number;
+}
+export interface HistoricalDataPoint {
+  timestamp: number;
+  value: number;
 }
 
 interface HeaderItem {
@@ -13,6 +19,8 @@ interface HeaderItem {
 
 interface CoinItem extends Coin {
   type: 'topGainer' | 'topLoser' | 'coin';
+  rank?: number;
+  isFavorite?: boolean;
 }
 
 export type HomeDataItem = HeaderItem | CoinItem;
