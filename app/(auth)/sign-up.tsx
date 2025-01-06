@@ -1,9 +1,18 @@
 import { useSignUp } from '@clerk/clerk-expo';
 import { LinearGradient } from 'expo-linear-gradient';
-import { useRouter } from 'expo-router';
+import { Link, useRouter } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import * as React from 'react';
-import { Text, TextInput, Button, StyleSheet, SafeAreaView, Dimensions } from 'react-native';
+import {
+  Text,
+  TextInput,
+  Button,
+  StyleSheet,
+  SafeAreaView,
+  Dimensions,
+  View,
+  Pressable,
+} from 'react-native';
 
 import { colors } from '~/constants/colors';
 
@@ -96,6 +105,16 @@ export default function SignUpScreen() {
           <Text style={styles.warningMessage}>Password must be minimum of 8 characters!</Text>
         )}
         <Button title="Continue" onPress={onSignUpPress} color="cyan" />
+        <View style={styles.button}>
+          <Text style={[styles.buttonText, { color: colors.primary.light }]}>
+            Already have an account?
+          </Text>
+          <Link asChild href="/(auth)/sign-in">
+            <Pressable style={styles.buttonContainer}>
+              <Text style={styles.buttonText}>Sign In</Text>
+            </Pressable>
+          </Link>
+        </View>
       </SafeAreaView>
       <StatusBar style="light" />
     </LinearGradient>
@@ -136,5 +155,22 @@ const styles = StyleSheet.create({
     fontSize: 12,
     textAlign: 'center',
     fontWeight: 'bold',
+  },
+  button: {
+    alignItems: 'center',
+    padding: 10,
+    gap: 10,
+  },
+  buttonText: {
+    color: colors.primary.dark,
+    fontWeight: 'bold',
+    padding: 5,
+  },
+  buttonContainer: {
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: colors.primary.dark,
+    padding: 10,
+    backgroundColor: colors.primary.light,
   },
 });
