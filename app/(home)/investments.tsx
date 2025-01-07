@@ -1,3 +1,4 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, SafeAreaView, ActivityIndicator, Button } from 'react-native';
@@ -7,10 +8,11 @@ import { colors } from '~/constants/colors';
 import { Coin, useCoinStore } from '~/store/store';
 
 export default function InvestmentsScreen() {
-  const { coins, loading, error, fetchCoins, calculateTotalBalance, wallet } = useCoinStore();
+  const { coins, loading, error, fetchCoins, calculateTotalBalance } = useCoinStore();
   const [search, setSearch] = useState('');
   const [coin, setCoin] = useState<Coin | null>(null);
   const [quantity, setQuantity] = useState('');
+  const [wallet, setWallet] = useState([]);
 
   useEffect(() => {
     fetchCoins();
@@ -25,38 +27,33 @@ export default function InvestmentsScreen() {
     setCoin(searchedCoin || null);
   };
 
-  const addToWallet = () => {
+  const addToWallet = async () => {
     if (coin) {
       const parsedQuantity = parseFloat(quantity) || 0;
       if (parsedQuantity > 0) {
-        useCoinStore.getState().addToWallet(coin, parsedQuantity);
-        alert(`${parsedQuantity} ${coin.name} added to your wallet.`);
-        setQuantity('');
+        try {
+          const existingData = await AsyncStorage.getItem('invesments');
+          const investments = existingData ? JSON.parse(existingData) : [];
+          const existingCoin = investments.find((item: any) => item.coin_id === coin.id);
+
+          if (existingCoin) {
+            existingCoin.quantity += parsedQuantity;
+          } else {
+            investments.push({ coin_id: coin.id, coin_name: coin.name, quantity: parsedQuantity });
+          }
+
+          await AsyncStorage.setItem('investments', JSON.stringify(investments));
+          setWallet(investments);
+          alert(`${parsedQuantity} ${coin.name} added.`);
+          setQuantity('');
+        } catch (error) {
+          console.error(error);
+        }
       } else {
-        alert('Invalid quantity.');
+        console.warn('Invalid quantity');
       }
-    }
-  };
-
-  const removeFromWallet = () => {
-    if (coin) {
-      const parsedQuantity = parseFloat(quantity) || 0;
-      const walletItem = wallet.find((item) => item.coin.id === coin.id);
-
-      if (!walletItem) {
-        alert(`You don't have any ${coin.name} in your wallet.`);
-        return;
-      }
-
-      if (parsedQuantity > 0 && parsedQuantity <= walletItem.quantity) {
-        useCoinStore.getState().removeFromWallet(coin, parsedQuantity);
-        alert(`${parsedQuantity} ${coin.name} removed from your wallet.`);
-        setQuantity('');
-      } else if (parsedQuantity > walletItem.quantity) {
-        alert(`You don't have enough ${coin.name} to remove that quantity.`);
-      } else {
-        alert('Invalid quantity.');
-      }
+    } else {
+      console.warn('No coins selected');
     }
   };
 
