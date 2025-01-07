@@ -9,6 +9,7 @@ import {
   ActivityIndicator,
   Button,
   Alert,
+  FlatList,
 } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
 
@@ -16,14 +17,15 @@ import { colors } from '~/constants/colors';
 import { Coin, useCoinStore } from '~/store/store';
 
 export default function InvestmentsScreen() {
-  const { coins, loading, error, fetchCoins, calculateTotalBalance } = useCoinStore();
+  const { coins, loading, error, fetchCoins } = useCoinStore();
   const [search, setSearch] = useState('');
   const [coin, setCoin] = useState<Coin | null>(null);
   const [quantity, setQuantity] = useState('');
-  const [wallet, setWallet] = useState([]);
+  const [wallet, setWallet] = useState<Coin[] | []>([]);
 
   useEffect(() => {
     fetchCoins();
+    fetchInvestments();
   }, []);
 
   const handleSearch = (search: string) => {
@@ -35,19 +37,33 @@ export default function InvestmentsScreen() {
     setCoin(searchedCoin || null);
   };
 
+  const fetchInvestments = async () => {
+    try {
+      const data = await AsyncStorage.getItem('investments');
+      const investments = data ? JSON.parse(data) : [];
+      setWallet(investments);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   const addToWallet = async () => {
     if (coin) {
       const parsedQuantity = parseFloat(quantity) || 0;
       if (parsedQuantity > 0) {
         try {
-          const existingData = await AsyncStorage.getItem('invesments');
+          const existingData = await AsyncStorage.getItem('investments');
           const investments = existingData ? JSON.parse(existingData) : [];
           const existingCoin = investments.find((item: any) => item.coin_id === coin.id);
 
           if (existingCoin) {
             existingCoin.quantity += parsedQuantity;
           } else {
-            investments.push({ coin_id: coin.id, coin_name: coin.name, quantity: parsedQuantity });
+            investments.push({
+              coin_id: coin.id,
+              coin_name: coin.name,
+              quantity: parsedQuantity,
+            });
           }
 
           await AsyncStorage.setItem('investments', JSON.stringify(investments));
@@ -64,12 +80,11 @@ export default function InvestmentsScreen() {
       console.warn('No coins selected');
     }
   };
-
-  const removeFromWallet = async () => {
+  const removeFromWallet = async (coinId: any) => {
     try {
       const data = await AsyncStorage.getItem('investments');
       const investments = data ? JSON.parse(data) : [];
-      const updatedInvestments = investments.filter((item: any) => item.coin_id !== coin?.id);
+      const updatedInvestments = investments.filter((item: any) => item.coin_id !== coinId);
       await AsyncStorage.setItem('investments', JSON.stringify(updatedInvestments));
       setWallet(updatedInvestments);
       Alert.alert('Coin removed!');
@@ -120,7 +135,29 @@ export default function InvestmentsScreen() {
             </View>
           )}
           {/* Total Balance of User */}
+          <View style={styles.balanceContainer}>
+            <Text style={styles.balanceText}>Total Balance $: </Text>
+          </View>
           {/* Wallet items */}
+          <FlatList
+            data={wallet}
+            keyExtractor={(item) => `${item.coin_id}`}
+            renderItem={({ item }) => {
+              return (
+                <View style={styles.walletContainer}>
+                  <View style={styles.walletItem}>
+                    <Text style={styles.walletText}>{item.coin_name}</Text>
+                    <Text style={styles.walletText}>Quantity: {item.quantity}</Text>
+                    <Button
+                      onPress={() => removeFromWallet(item.coin_id)}
+                      title="Delete"
+                      color="red"
+                    />
+                  </View>
+                </View>
+              );
+            }}
+          />
         </SafeAreaView>
       </LinearGradient>
     </View>
@@ -173,15 +210,23 @@ const styles = StyleSheet.create({
     color: colors.primary.light,
     fontSize: 20,
   },
+  walletContainer: {
+    padding: 10,
+    backgroundColor: colors.primary.main,
+    margin: 10,
+    borderRadius: 10,
+  },
   walletItem: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    padding: 10,
+    alignItems: 'center',
+    padding: 15,
     borderBottomWidth: 1,
-    borderColor: colors.primary.light,
+    borderColor: 'gray',
   },
   walletText: {
     color: colors.primary.light,
     fontSize: 16,
+    fontWeight: 'bold',
   },
 });

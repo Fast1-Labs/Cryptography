@@ -6,6 +6,9 @@ export interface Coin {
   change_24h: number;
   market_cap?: number;
   volume_24h?: number;
+  coin_id: string;
+  coin_name: string;
+  quantity: string;
 }
 export interface HistoricalDataPoint {
   timestamp: number;
