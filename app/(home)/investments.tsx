@@ -1,7 +1,15 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, SafeAreaView, ActivityIndicator, Button } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  SafeAreaView,
+  ActivityIndicator,
+  Button,
+  Alert,
+} from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
 
 import { colors } from '~/constants/colors';
@@ -44,7 +52,7 @@ export default function InvestmentsScreen() {
 
           await AsyncStorage.setItem('investments', JSON.stringify(investments));
           setWallet(investments);
-          alert(`${parsedQuantity} ${coin.name} added.`);
+          Alert.alert(`${parsedQuantity} ${coin.name} added.`);
           setQuantity('');
         } catch (error) {
           console.error(error);
@@ -54,6 +62,19 @@ export default function InvestmentsScreen() {
       }
     } else {
       console.warn('No coins selected');
+    }
+  };
+
+  const removeFromWallet = async () => {
+    try {
+      const data = await AsyncStorage.getItem('investments');
+      const investments = data ? JSON.parse(data) : [];
+      const updatedInvestments = investments.filter((item: any) => item.coin_id !== coin?.id);
+      await AsyncStorage.setItem('investments', JSON.stringify(updatedInvestments));
+      setWallet(updatedInvestments);
+      Alert.alert('Coin removed!');
+    } catch (error) {
+      console.error(error);
     }
   };
 
@@ -99,25 +120,7 @@ export default function InvestmentsScreen() {
             </View>
           )}
           {/* Total Balance of User */}
-          <View style={styles.balanceContainer}>
-            <Text style={styles.balanceText}>
-              Total Balance $: {calculateTotalBalance().toFixed(2)}
-            </Text>
-          </View>
-
-          {/* List of Wallet Items */}
-          <View>
-            {wallet.map((item, index) => (
-              <View key={index} style={styles.walletItem}>
-                <Text style={styles.walletText}>
-                  {item.coin.name} ({item.coin.symbol}): {item.quantity} coins
-                </Text>
-                <Text style={styles.walletText}>
-                  Value: ${(item.coin.price_usd * item.quantity).toFixed(2)}
-                </Text>
-              </View>
-            ))}
-          </View>
+          {/* Wallet items */}
         </SafeAreaView>
       </LinearGradient>
     </View>
