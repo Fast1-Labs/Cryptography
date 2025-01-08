@@ -10,6 +10,7 @@ import {
   Button,
   Alert,
   FlatList,
+  Pressable,
 } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
 
@@ -45,10 +46,15 @@ export default function InvestmentsScreen() {
     try {
       const data = await AsyncStorage.getItem('investments');
       const investments = data ? JSON.parse(data) : [];
-      const updatedInvestments = investments.map((item: any) => ({
-        ...item,
-        quantity: parseFloat(item.quantity),
-      }));
+
+      const updatedInvestments = investments.map((investment: any) => {
+        const realTimeCoin = coins.find((coin) => coin.id === investment.coin_id);
+        return {
+          ...investment,
+          price_usd: realTimeCoin ? realTimeCoin.price_usd : investment.price_usd,
+        };
+      });
+
       setWallet(updatedInvestments);
     } catch (err) {
       console.error(err);
@@ -166,11 +172,11 @@ export default function InvestmentsScreen() {
                     <Text style={[styles.walletText, { flex: 1 }]}>
                       $ {item.price_usd.toFixed(4)}
                     </Text>
-                    <Button
+                    <Pressable
                       onPress={() => removeFromWallet(item.coin_id)}
-                      title="Delete"
-                      color="red"
-                    />
+                      style={{ backgroundColor: 'red', padding: 5, borderRadius: 10 }}>
+                      <Text style={{ color: colors.primary.light }}>Delete</Text>
+                    </Pressable>
                   </View>
                 </View>
               );
