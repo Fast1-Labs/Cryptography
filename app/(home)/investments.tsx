@@ -167,8 +167,8 @@ export default function InvestmentsScreen() {
               return (
                 <View style={styles.walletContainer}>
                   <View style={styles.walletItem}>
-                    <Text style={styles.walletText}>{item.coin_name}</Text>
-                    <Text style={styles.walletText}>{item.quantity}</Text>
+                    <Text style={[styles.walletText, { width: 100 }]}>{item.coin_name}</Text>
+                    <Text style={[styles.walletText, { width: 50 }]}>{item.quantity}</Text>
                     <Text style={styles.walletText}>$ {item.price_usd.toFixed(4)}</Text>
                     <Button
                       onPress={() => removeFromWallet(item.coin_id)}
