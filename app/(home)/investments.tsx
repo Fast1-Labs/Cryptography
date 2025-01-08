@@ -45,7 +45,11 @@ export default function InvestmentsScreen() {
     try {
       const data = await AsyncStorage.getItem('investments');
       const investments = data ? JSON.parse(data) : [];
-      setWallet(investments);
+      const updatedInvestments = investments.map((item: any) => ({
+        ...item,
+        quantity: parseFloat(item.quantity),
+      }));
+      setWallet(updatedInvestments);
     } catch (err) {
       console.error(err);
     }
@@ -150,6 +154,12 @@ export default function InvestmentsScreen() {
             <Text style={styles.balanceText}>Total Balance $: {calculateTotalBalance()} </Text>
           </View>
           {/* Wallet items */}
+          <View style={{ flexDirection: 'row', justifyContent: 'space-around', padding: 10 }}>
+            <Text style={styles.walletText}>Name</Text>
+            <Text style={styles.walletText}>Quantity</Text>
+            <Text style={styles.walletText}>Price</Text>
+            <Text style={styles.walletText}>Delete</Text>
+          </View>
           <FlatList
             data={wallet}
             keyExtractor={(item) => `${item.coin_id}`}
@@ -158,8 +168,8 @@ export default function InvestmentsScreen() {
                 <View style={styles.walletContainer}>
                   <View style={styles.walletItem}>
                     <Text style={styles.walletText}>{item.coin_name}</Text>
-                    <Text style={styles.walletText}>Quantity: {item.quantity}</Text>
-                    <Text style={styles.walletText}>{item.price_usd}</Text>
+                    <Text style={styles.walletText}>{item.quantity}</Text>
+                    <Text style={styles.walletText}>$ {item.price_usd.toFixed(4)}</Text>
                     <Button
                       onPress={() => removeFromWallet(item.coin_id)}
                       title="Delete"
@@ -232,13 +242,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: 15,
+    padding: 10,
     borderBottomWidth: 1,
     borderColor: 'gray',
   },
   walletText: {
     color: colors.primary.light,
-    fontSize: 16,
-    fontWeight: 'bold',
+    fontSize: 14,
+    fontWeight: 'semibold',
   },
 });
