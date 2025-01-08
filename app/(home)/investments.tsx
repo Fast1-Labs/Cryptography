@@ -28,6 +28,10 @@ export default function InvestmentsScreen() {
     fetchInvestments();
   }, []);
 
+  useEffect(() => {
+    calculateTotalBalance();
+  }, [wallet]);
+
   const handleSearch = (search: string) => {
     const searchedCoin = coins.find(
       (coin) =>
@@ -63,6 +67,7 @@ export default function InvestmentsScreen() {
               coin_id: coin.id,
               coin_name: coin.name,
               quantity: parsedQuantity,
+              price_usd: coin.price_usd,
             });
           }
 
@@ -91,6 +96,12 @@ export default function InvestmentsScreen() {
     } catch (error) {
       console.error(error);
     }
+  };
+
+  const calculateTotalBalance = () => {
+    return wallet
+      .reduce((total, item) => total + parseFloat(item.quantity) * item.price_usd, 0)
+      .toFixed(2);
   };
 
   if (loading) return <ActivityIndicator />;
@@ -136,7 +147,7 @@ export default function InvestmentsScreen() {
           )}
           {/* Total Balance of User */}
           <View style={styles.balanceContainer}>
-            <Text style={styles.balanceText}>Total Balance $: </Text>
+            <Text style={styles.balanceText}>Total Balance $: {calculateTotalBalance()} </Text>
           </View>
           {/* Wallet items */}
           <FlatList
@@ -148,6 +159,7 @@ export default function InvestmentsScreen() {
                   <View style={styles.walletItem}>
                     <Text style={styles.walletText}>{item.coin_name}</Text>
                     <Text style={styles.walletText}>Quantity: {item.quantity}</Text>
+                    <Text style={styles.walletText}>{item.price_usd}</Text>
                     <Button
                       onPress={() => removeFromWallet(item.coin_id)}
                       title="Delete"
