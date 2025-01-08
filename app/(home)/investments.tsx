@@ -154,12 +154,6 @@ export default function InvestmentsScreen() {
             <Text style={styles.balanceText}>Total Balance $: {calculateTotalBalance()} </Text>
           </View>
           {/* Wallet items */}
-          <View style={{ flexDirection: 'row', justifyContent: 'space-around', padding: 10 }}>
-            <Text style={styles.walletText}>Name</Text>
-            <Text style={styles.walletText}>Quantity</Text>
-            <Text style={styles.walletText}>Price</Text>
-            <Text style={styles.walletText}>Delete</Text>
-          </View>
           <FlatList
             data={wallet}
             keyExtractor={(item) => `${item.coin_id}`}
@@ -169,7 +163,9 @@ export default function InvestmentsScreen() {
                   <View style={styles.walletItem}>
                     <Text style={[styles.walletText, { width: 100 }]}>{item.coin_name}</Text>
                     <Text style={[styles.walletText, { width: 50 }]}>{item.quantity}</Text>
-                    <Text style={styles.walletText}>$ {item.price_usd.toFixed(4)}</Text>
+                    <Text style={[styles.walletText, { flex: 1 }]}>
+                      $ {item.price_usd.toFixed(4)}
+                    </Text>
                     <Button
                       onPress={() => removeFromWallet(item.coin_id)}
                       title="Delete"
