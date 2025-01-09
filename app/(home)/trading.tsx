@@ -1,3 +1,4 @@
+import { AntDesign, FontAwesome } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useEffect, useState } from 'react';
 import {
@@ -8,6 +9,7 @@ import {
   Dimensions,
   View,
   FlatList,
+  Pressable,
 } from 'react-native';
 import { LineGraph, GraphPoint } from 'react-native-graph';
 
@@ -51,6 +53,8 @@ export default function Details() {
     setSelectedPoint(null);
   }, [selectedCoin]);
 
+  const onDaysChange = () => {};
+
   if (loading)
     return (
       <ActivityIndicator
@@ -85,9 +89,14 @@ export default function Details() {
           horizontal
           contentContainerStyle={{ padding: 20, gap: 10 }}
         />
-        <Text style={styles.coinTitle}>
-          {selectedCoin.toUpperCase()} - Last {days} Days
-        </Text>
+        <View style={{ flexDirection: 'row', justifyContent: 'center', gap: 10 }}>
+          <Text style={styles.coinTitle}>
+            {selectedCoin.toUpperCase()} - Last {days} Days
+          </Text>
+          <Pressable style={{ alignItems: 'center' }} onPress={onDaysChange}>
+            <AntDesign name="caretdown" color={colors.primary.light} size={20} />
+          </Pressable>
+        </View>
         {graphData.length > 0 ? (
           <LineGraph
             style={styles.graph}
