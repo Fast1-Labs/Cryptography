@@ -4,6 +4,21 @@ Cryptography is a mobile application built with **React Native**, **Expo**, and 
 
 Currently available for closed testing.
 
+## Features
+
+- **Secure Personal Crypto Wallet**: Store and manage your cryptocurrencies securely.
+- **Real-time Coin Prices**: View live data for your favorite coins.
+- **Historical Data**: Access detailed historical information for various cryptocurrencies.
+- **State Management with Zustand**: Efficient and scalable state management for a smooth user experience.
+- **Authentication with Clerk**: Easy and secure user authentication for logging in and managing your wallet.
+- **Data Persistence with AsyncStorage**: Securely store your wallet data locally, even when offline.
+
+## Screenshots
+
+https://github.com/user-attachments/assets/a2265c88-59c7-4f03-a16e-05c60ecdd482
+
+
+
 ## API Reference
 
 ### Coin Data API (REST API)
@@ -31,18 +46,4 @@ The Coin Data API provides real-time and historical data for various cryptocurre
   - **Description**: Retrieves data for market trends and trading volumes across different exchanges.
 
 ---
-
-## Features
-
-- **Secure Personal Crypto Wallet**: Store and manage your cryptocurrencies securely.
-- **Real-time Coin Prices**: View live data for your favorite coins.
-- **Historical Data**: Access detailed historical information for various cryptocurrencies.
-- **State Management with Zustand**: Efficient and scalable state management for a smooth user experience.
-- **Authentication with Clerk**: Easy and secure user authentication for logging in and managing your wallet.
-- **Data Persistence with AsyncStorage**: Securely store your wallet data locally, even when offline.
-
-## Screenshots
-
-https://github.com/user-attachments/assets/a2265c88-59c7-4f03-a16e-05c60ecdd482
-
 
