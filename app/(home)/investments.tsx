@@ -11,6 +11,7 @@ import {
   FlatList,
   Pressable,
   TextInput,
+  Modal,
 } from 'react-native';
 
 import { colors } from '~/constants/colors';
@@ -20,8 +21,11 @@ export default function InvestmentsScreen() {
   const { coins, loading, error, fetchCoins } = useCoinStore();
   const [search, setSearch] = useState('');
   const [coin, setCoin] = useState<Coin | null>(null);
-  const [quantity, setQuantity] = useState('');
+  const [quantity, setQuantity] = useState<string>('');
   const [wallet, setWallet] = useState<Coin[] | []>([]);
+  const [selectedCoin, setSelectedCoin] = useState<Coin | null>(null);
+  const [removeQuantity, setRemoveQuantity] = useState<string>('');
+  const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
 
   useEffect(() => {
     fetchCoins();
@@ -95,14 +99,33 @@ export default function InvestmentsScreen() {
     }
   };
 
-  const removeFromWallet = async (coinId: any) => {
+  const removeFromWallet = async () => {
+    if (!selectedCoin || !removeQuantity) return;
+
+    const quantityToRemove = parseFloat(removeQuantity);
+    if (isNaN(quantityToRemove) || quantityToRemove <= 0) {
+      Alert.alert('Invalid quantity');
+      return;
+    }
+
     try {
       const data = await AsyncStorage.getItem('investments');
       const investments = data ? JSON.parse(data) : [];
-      const updatedInvestments = investments.filter((item: any) => item.coin_id !== coinId);
+
+      const updatedInvestments = investments
+        .map((item: any) => {
+          if (item.coin_id === selectedCoin.coin_id) {
+            const newQuantity = item.quantity - quantityToRemove;
+            return newQuantity > 0 ? { ...item, quantity: newQuantity } : null;
+          }
+          return item;
+        })
+        .filter((item: any) => item !== null);
+
       await AsyncStorage.setItem('investments', JSON.stringify(updatedInvestments));
       setWallet(updatedInvestments);
-      Alert.alert('Coin removed!');
+      setIsModalVisible(false);
+      Alert.alert(`${quantityToRemove} of ${selectedCoin.coin_name} removed!`);
     } catch (error) {
       console.error(error);
     }
@@ -169,25 +192,54 @@ export default function InvestmentsScreen() {
           <FlatList
             data={wallet}
             keyExtractor={(item) => `${item.coin_id}`}
-            renderItem={({ item }) => {
-              return (
-                <View style={styles.walletContainer}>
-                  <View style={styles.walletItem}>
-                    <Text style={[styles.walletText, { width: 100 }]}>{item.coin_name}</Text>
-                    <Text style={[styles.walletText, { width: 50 }]}>{item.quantity}</Text>
-                    <Text style={[styles.walletText, { flex: 1 }]}>
-                      $ {item.price_usd.toFixed(4)}
-                    </Text>
-                    <Pressable
-                      onPress={() => removeFromWallet(item.coin_id)}
-                      style={styles.deleteButton}>
-                      <Text style={styles.buttonText}>Delete</Text>
+            renderItem={({ item }) => (
+              <View style={styles.walletContainer}>
+                <View style={styles.walletItem}>
+                  <Text style={[styles.walletText, { width: 100 }]}>{item.coin_name}</Text>
+                  <Text style={[styles.walletText, { width: 50 }]}>{item.quantity}</Text>
+                  <Text style={[styles.walletText, { flex: 1 }]}>
+                    $ {item.price_usd.toFixed(4)}
+                  </Text>
+                  <Pressable
+                    onPress={() => {
+                      setSelectedCoin(item);
+                      setIsModalVisible(true);
+                    }}
+                    style={styles.deleteButton}>
+                    <Text style={styles.buttonText}>Delete</Text>
+                  </Pressable>
+                </View>
+              </View>
+            )}
+          />
+          {isModalVisible && (
+            <Modal
+              animationType="slide"
+              transparent
+              visible={isModalVisible}
+              onRequestClose={() => setIsModalVisible(false)}>
+              <View style={styles.modalContainer}>
+                <View style={styles.modalContent}>
+                  <Text>Remove {selectedCoin?.coin_name}</Text>
+                  <TextInput
+                    value={removeQuantity}
+                    onChangeText={setRemoveQuantity}
+                    placeholder="Enter quantity"
+                    keyboardType="numeric"
+                    style={styles.quantityDeleteInput}
+                  />
+                  <View style={styles.modalButtons}>
+                    <Pressable onPress={removeFromWallet} style={styles.confirmButton}>
+                      <Text>Confirm</Text>
+                    </Pressable>
+                    <Pressable onPress={() => setIsModalVisible(false)} style={styles.cancelButton}>
+                      <Text>Cancel</Text>
                     </Pressable>
                   </View>
                 </View>
-              );
-            }}
-          />
+              </View>
+            </Modal>
+          )}
         </SafeAreaView>
       </LinearGradient>
     </View>
@@ -257,6 +309,13 @@ const styles = StyleSheet.create({
     color: 'white',
     marginVertical: 5,
   },
+  quantityDeleteInput: {
+    borderColor: colors.primary.light,
+    borderWidth: 1,
+    padding: 5,
+    color: colors.primary.dark,
+    marginVertical: 5,
+  },
   addButton: {
     backgroundColor: colors.secondary.main,
     padding: 10,
@@ -292,5 +351,41 @@ const styles = StyleSheet.create({
     backgroundColor: 'red',
     padding: 5,
     borderRadius: 5,
+  },
+  confirmButton: {
+    backgroundColor: '#4caf50',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 8,
+    marginRight: 10,
+  },
+  cancelButton: {
+    backgroundColor: '#f44336',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 8,
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+
+  modalContent: {
+    width: '80%',
+    backgroundColor: '#ffffff',
+    borderRadius: 10,
+    padding: 20,
+    alignItems: 'center',
+    elevation: 5,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+  },
+  modalButtons: {
+    flexDirection: 'row',
+    marginTop: 20,
   },
 });
