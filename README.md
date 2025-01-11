@@ -43,4 +43,6 @@ The Coin Data API provides real-time and historical data for various cryptocurre
 
 ## Screenshots
 
+https://github.com/user-attachments/assets/a2265c88-59c7-4f03-a16e-05c60ecdd482
+
 
