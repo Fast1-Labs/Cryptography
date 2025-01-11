@@ -7,12 +7,11 @@ import {
   StyleSheet,
   SafeAreaView,
   ActivityIndicator,
-  Button,
   Alert,
   FlatList,
   Pressable,
+  TextInput,
 } from 'react-native';
-import { TextInput } from 'react-native-gesture-handler';
 
 import { colors } from '~/constants/colors';
 import { Coin, useCoinStore } from '~/store/store';
@@ -95,6 +94,7 @@ export default function InvestmentsScreen() {
       console.warn('No coins selected');
     }
   };
+
   const removeFromWallet = async (coinId: any) => {
     try {
       const data = await AsyncStorage.getItem('investments');
@@ -114,15 +114,15 @@ export default function InvestmentsScreen() {
       .toFixed(2);
   };
 
-  if (loading) return <ActivityIndicator />;
-  if (error) return <Text style={{ color: 'red', fontSize: 20, fontWeight: 'bold' }}>{error}</Text>;
+  if (loading) return <ActivityIndicator size="large" color={colors.primary.light} />;
+  if (error) return <Text style={styles.errorText}>{error}</Text>;
 
   return (
     <View style={styles.container}>
       <LinearGradient style={styles.container} colors={['#3E1D92', '#1B1030', '#000000']}>
         <SafeAreaView>
           {/* Header Title */}
-          <Text style={styles.headerTitle}>My Invesments</Text>
+          <Text style={styles.headerTitle}>My Investments</Text>
           {/* Coin add search */}
           <View style={styles.coinSearchContainer}>
             <TextInput
@@ -130,8 +130,11 @@ export default function InvestmentsScreen() {
               value={search}
               onChangeText={setSearch}
               style={styles.input}
+              placeholderTextColor="gray"
             />
-            <Button title="Search" onPress={() => handleSearch(search)} />
+            <Pressable style={styles.searchButton} onPress={() => handleSearch(search)}>
+              <Text style={styles.buttonText}>Search</Text>
+            </Pressable>
           </View>
           {/* Searched coin result */}
           {coin && (
@@ -150,14 +153,17 @@ export default function InvestmentsScreen() {
                 onChangeText={setQuantity}
                 placeholder="0"
                 placeholderTextColor="white"
-                style={{ color: colors.primary.light }}
+                keyboardType="numeric"
+                style={styles.quantityInput}
               />
-              <Button title="Add" onPress={addToWallet} />
+              <Pressable style={styles.addButton} onPress={addToWallet}>
+                <Text style={styles.buttonText}>Add</Text>
+              </Pressable>
             </View>
           )}
           {/* Total Balance of User */}
           <View style={styles.balanceContainer}>
-            <Text style={styles.balanceText}>Total Balance $: {calculateTotalBalance()} </Text>
+            <Text style={styles.balanceText}>Total Balance: $ {calculateTotalBalance()} </Text>
           </View>
           {/* Wallet items */}
           <FlatList
@@ -174,8 +180,8 @@ export default function InvestmentsScreen() {
                     </Text>
                     <Pressable
                       onPress={() => removeFromWallet(item.coin_id)}
-                      style={{ backgroundColor: 'red', padding: 5, borderRadius: 10 }}>
-                      <Text style={{ color: colors.primary.light }}>Delete</Text>
+                      style={styles.deleteButton}>
+                      <Text style={styles.buttonText}>Delete</Text>
                     </Pressable>
                   </View>
                 </View>
@@ -195,21 +201,40 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontSize: 30,
     fontWeight: 'bold',
-    color: colors.primary.dark,
+    color: colors.primary.light,
     padding: 20,
+    textAlign: 'center',
+  },
+  errorText: {
+    color: 'red',
+    fontSize: 20,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    marginTop: 20,
   },
   coinSearchContainer: {
-    borderRadius: 10,
-    borderWidth: 0.3,
-    borderColor: colors.primary.light,
-    padding: 5,
-    margin: 10,
     flexDirection: 'row',
+    alignItems: 'center',
+    margin: 10,
+    borderColor: colors.primary.light,
+    borderWidth: 0.5,
+    borderRadius: 10,
+    padding: 5,
   },
   input: {
     flex: 1,
-    paddingLeft: 10,
+    padding: 10,
     color: colors.primary.light,
+  },
+  searchButton: {
+    backgroundColor: colors.secondary.main,
+    padding: 10,
+    borderRadius: 5,
+    marginLeft: 5,
+  },
+  buttonText: {
+    color: colors.primary.light,
+    fontWeight: 'bold',
   },
   coinContainer: {
     flexDirection: 'row',
@@ -217,14 +242,25 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 10,
     margin: 10,
-    borderWidth: 0.5,
     borderColor: colors.primary.dark,
+    borderWidth: 0.5,
     borderRadius: 10,
   },
   coinText: {
     color: colors.primary.light,
     fontSize: 16,
-    fontWeight: 'semibold',
+  },
+  quantityInput: {
+    borderColor: colors.primary.light,
+    borderWidth: 1,
+    padding: 5,
+    color: 'white',
+    marginVertical: 5,
+  },
+  addButton: {
+    backgroundColor: colors.secondary.main,
+    padding: 10,
+    borderRadius: 5,
   },
   balanceContainer: {
     padding: 20,
@@ -235,22 +271,26 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
   walletContainer: {
-    padding: 10,
     backgroundColor: colors.primary.main,
     margin: 10,
+    padding: 10,
     borderRadius: 10,
   },
   walletItem: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: 10,
     borderBottomWidth: 1,
     borderColor: 'gray',
+    paddingVertical: 5,
   },
   walletText: {
     color: colors.primary.light,
     fontSize: 14,
-    fontWeight: 'semibold',
+  },
+  deleteButton: {
+    backgroundColor: 'red',
+    padding: 5,
+    borderRadius: 5,
   },
 });
