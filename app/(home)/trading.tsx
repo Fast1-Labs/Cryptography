@@ -1,4 +1,4 @@
-import { AntDesign, FontAwesome } from '@expo/vector-icons';
+import { AntDesign } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useEffect, useState } from 'react';
 import {
@@ -10,6 +10,8 @@ import {
   View,
   FlatList,
   Pressable,
+  TouchableOpacity,
+  Modal,
 } from 'react-native';
 import { LineGraph, GraphPoint } from 'react-native-graph';
 
@@ -21,9 +23,9 @@ export default function Details() {
   const { historicalData, loading, error, fetchHistoricalData } = useCoinStore();
   const { coins, fetchCoins } = useCoinStore();
   const [selectedCoin, setSelectedCoin] = useState('bitcoin');
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [days, setDays] = useState(30);
   const [selectedPoint, setSelectedPoint] = useState<GraphPoint | null>(null);
+  const [isModalVisible, setModalVisible] = useState(false);
 
   useEffect(() => {
     fetchCoins();
@@ -34,6 +36,10 @@ export default function Details() {
       fetchHistoricalData(selectedCoin, days);
     }
   }, [selectedCoin, days]);
+
+  useEffect(() => {
+    setSelectedPoint(null);
+  }, [selectedCoin]);
 
   const data = historicalData[selectedCoin] || [];
   const graphData = data
@@ -49,12 +55,14 @@ export default function Details() {
     setSelectedPoint(point);
   };
 
-  useEffect(() => {
-    setSelectedPoint(null);
-  }, [selectedCoin]);
+  const toggleModal = () => {
+    setModalVisible(!isModalVisible);
+  };
 
-  const onDaysChange = () => {};
-
+  const handleDaySelection = (selectedDays: number) => {
+    setDays(selectedDays);
+    toggleModal();
+  };
   if (loading)
     return (
       <ActivityIndicator
@@ -93,7 +101,7 @@ export default function Details() {
           <Text style={styles.coinTitle}>
             {selectedCoin.toUpperCase()} - Last {days} Days
           </Text>
-          <Pressable style={{ alignItems: 'center' }} onPress={onDaysChange}>
+          <Pressable style={{ alignItems: 'center' }} onPress={toggleModal}>
             <AntDesign name="caretdown" color={colors.primary.light} size={20} />
           </Pressable>
         </View>
@@ -144,6 +152,24 @@ export default function Details() {
             %
           </Text>
         </View>
+        <Modal
+          visible={isModalVisible}
+          transparent
+          animationType="slide"
+          onRequestClose={toggleModal}>
+          <View style={styles.modalContainer}>
+            <View style={styles.modalContent}>
+              {[1, 7, 30, 90, 360].map((day) => (
+                <TouchableOpacity
+                  key={day}
+                  style={styles.modalOption}
+                  onPress={() => handleDaySelection(day)}>
+                  <Text style={styles.modalOptionText}>{day} Days</Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+          </View>
+        </Modal>
       </SafeAreaView>
     </LinearGradient>
   );
@@ -198,5 +224,28 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: colors.primary.light,
     marginVertical: 2,
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  modalContent: {
+    backgroundColor: colors.primary.dark,
+    padding: 20,
+    borderRadius: 10,
+    width: '80%',
+  },
+  modalOption: {
+    padding: 10,
+    marginVertical: 5,
+    backgroundColor: colors.primary.main,
+    borderRadius: 5,
+  },
+  modalOptionText: {
+    color: colors.primary.light,
+    textAlign: 'center',
+    fontSize: 18,
   },
 });
