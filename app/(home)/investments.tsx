@@ -12,6 +12,7 @@ import {
   Pressable,
   TextInput,
   Modal,
+  Dimensions,
 } from 'react-native';
 
 import { colors } from '~/constants/colors';
@@ -186,6 +187,10 @@ export default function InvestmentsScreen() {
           )}
           {/* Total Balance of User */}
           <View style={styles.balanceContainer}>
+            <Text style={styles.title}>
+              <Text style={{ color: colors.primary.light }}>Crypto</Text>graphy
+              <Text style={{ color: colors.primary.light }}> Wallet</Text>
+            </Text>
             <Text style={styles.balanceText}>Total Balance: $ {calculateTotalBalance()} </Text>
           </View>
           {/* Wallet items */}
@@ -322,7 +327,18 @@ const styles = StyleSheet.create({
   },
   balanceContainer: {
     padding: 20,
+    borderWidth: 1,
+    borderRadius: 10,
+    borderColor: 'gainsboro',
+    margin: 10,
+    height: Dimensions.get('window').height / 10,
+    gap: 20,
     alignItems: 'center',
+  },
+  title: {
+    color: colors.primary.main,
+    fontSize: 20,
+    fontWeight: 'bold',
   },
   balanceText: {
     color: colors.primary.light,
