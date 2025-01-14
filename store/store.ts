@@ -56,8 +56,6 @@ export const useCoinStore = create<CoinStore>((set, get) => ({
       }
 
       const data = await response.json();
-      console.log('Response data:', data);
-
       const formattedData = data.prices.map(([timestamp, value]: [number, number]) => ({
         timestamp,
         value,
