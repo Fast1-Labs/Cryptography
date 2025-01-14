@@ -253,9 +253,8 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontSize: 30,
     fontWeight: 'bold',
-    color: colors.primary.light,
+    color: colors.primary.dark,
     padding: 20,
-    textAlign: 'center',
   },
   errorText: {
     color: 'red',

@@ -34,7 +34,6 @@ export default function Home() {
   const topGainers = sortedCoins.slice(0, 5);
   const topLosers = sortedCoins.slice(-5).reverse();
 
-  // Filter coins based on search query
   const filteredCoins = search
     ? coins.filter(
         (coin) =>
