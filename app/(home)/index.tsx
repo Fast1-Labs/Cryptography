@@ -11,6 +11,8 @@ import {
   ActivityIndicator,
   FlatList,
   Image,
+  KeyboardAvoidingView,
+  Platform,
 } from 'react-native';
 import { ScrollView, TextInput } from 'react-native-gesture-handler';
 
@@ -54,61 +56,65 @@ export default function Home() {
 
   return (
     <LinearGradient style={styles.container} colors={['#3E1D92', '#1B1030', '#000000']}>
-      <SafeAreaView style={{ flex: 1 }}>
-        <ScrollView showsVerticalScrollIndicator={false}>
-          <Text style={styles.header}>
-            Cryto<Text style={{ color: colors.primary.main }}>graphy</Text>
-          </Text>
-          <View>
-            <View style={styles.greetingContainer}>
-              <Text style={styles.greetingText}>Welcome {user?.firstName}</Text>
-              <Image
-                source={{ uri: user?.imageUrl }}
-                style={{ width: 50, height: 50, borderRadius: 30 }}
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        style={{ flex: 1 }}>
+        <SafeAreaView style={{ flex: 1 }}>
+          <ScrollView showsVerticalScrollIndicator={false}>
+            <Text style={styles.header}>
+              Cryto<Text style={{ color: colors.primary.main }}>graphy</Text>
+            </Text>
+            <View>
+              <View style={styles.greetingContainer}>
+                <Text style={styles.greetingText}>Welcome {user?.firstName}</Text>
+                <Image
+                  source={{ uri: user?.imageUrl }}
+                  style={{ width: 50, height: 50, borderRadius: 30 }}
+                />
+              </View>
+            </View>
+            <View style={styles.topContainer}>
+              <Text style={styles.topTitle}>Top Winners Today</Text>
+              <FlatList
+                scrollEnabled={false}
+                data={topGainers}
+                contentContainerStyle={{ gap: 10 }}
+                renderItem={({ item }) => <Top5 coin={item} />}
               />
             </View>
-          </View>
-          <View style={styles.topContainer}>
-            <Text style={styles.topTitle}>Top Winners Today</Text>
-            <FlatList
-              scrollEnabled={false}
-              data={topGainers}
-              contentContainerStyle={{ gap: 10 }}
-              renderItem={({ item }) => <Top5 coin={item} />}
-            />
-          </View>
-          <View style={styles.topContainer}>
-            <Text style={styles.topTitle}>Top Losers Today</Text>
-            <FlatList
-              scrollEnabled={false}
-              data={topLosers}
-              renderItem={({ item }) => <Top5 coin={item} />}
-              contentContainerStyle={{ gap: 10 }}
-            />
-          </View>
-          <View style={styles.coinContainer}>
-            <Text style={styles.bodyTitle}>Coins</Text>
-            <View style={styles.searchContainer}>
-              <TextInput
-                style={styles.searchInput}
-                placeholder="Enter the name of your coin..."
-                placeholderTextColor={colors.primary.light}
-                value={search}
-                onChangeText={setSearch}
+            <View style={styles.topContainer}>
+              <Text style={styles.topTitle}>Top Losers Today</Text>
+              <FlatList
+                scrollEnabled={false}
+                data={topLosers}
+                renderItem={({ item }) => <Top5 coin={item} />}
+                contentContainerStyle={{ gap: 10 }}
               />
-              <FontAwesome name="search" size={20} color={colors.primary.light} />
             </View>
-            <FlatList
-              data={search ? filteredCoins : coins}
-              scrollEnabled={false}
-              keyExtractor={(item) => item.id}
-              contentContainerStyle={{ gap: 10 }}
-              renderItem={({ item }) => <CoinListItem coin={item} />}
-            />
-          </View>
-          <StatusBar style="light" />
-        </ScrollView>
-      </SafeAreaView>
+            <View style={styles.coinContainer}>
+              <Text style={styles.bodyTitle}>Coins</Text>
+              <View style={styles.searchContainer}>
+                <TextInput
+                  style={styles.searchInput}
+                  placeholder="Enter the name of your coin..."
+                  placeholderTextColor={colors.primary.light}
+                  value={search}
+                  onChangeText={setSearch}
+                />
+                <FontAwesome name="search" size={20} color={colors.primary.light} />
+              </View>
+              <FlatList
+                data={search ? filteredCoins : coins}
+                scrollEnabled={false}
+                keyExtractor={(item) => item.id}
+                contentContainerStyle={{ gap: 10 }}
+                renderItem={({ item }) => <CoinListItem coin={item} />}
+              />
+            </View>
+            <StatusBar style="light" />
+          </ScrollView>
+        </SafeAreaView>
+      </KeyboardAvoidingView>
     </LinearGradient>
   );
 }
