@@ -18,7 +18,7 @@ export default function CoinListItem({ coin }: { coin: Coin }) {
                 ? { color: colors.secondary.main }
                 : { color: colors.secondary.accent },
             ]}>
-            {coin.change_24h.toFixed(5)}
+            % {coin.change_24h.toFixed(5)}
           </Text>
         </View>
         <View style={styles.priceContainer}>
