@@ -13,6 +13,8 @@ import {
   SafeAreaView,
   Dimensions,
   Pressable,
+  KeyboardAvoidingView,
+  Platform,
 } from 'react-native';
 
 import { colors } from '~/constants/colors';
@@ -70,39 +72,46 @@ export default function Page() {
     <LinearGradient
       style={styles.container}
       colors={['#000000', colors.primary.main, colors.primary.dark]}>
-      <SafeAreaView style={styles.bodyContainer}>
-        <Text style={styles.title}>Sign In</Text>
-        <Text style={styles.inputText}>Email</Text>
-        <TextInput
-          style={styles.textInput}
-          autoCapitalize="none"
-          value={emailAddress}
-          placeholder="Enter email"
-          onChangeText={(emailAddress) => setEmailAddress(emailAddress)}
-        />
-        <Text style={styles.inputText}>Password</Text>
-        <TextInput
-          style={styles.textInput}
-          value={password}
-          placeholder="Enter password"
-          secureTextEntry
-          onChangeText={(password) => setPassword(password)}
-        />
-        {error && <Text style={styles.errorMessage}>{error}</Text>}
-        <Pressable style={styles.googleButton} onPress={handleGoogleAuth}>
-          <Text style={styles.signInGoogleText}>Sign in with Google</Text>
-          <FontAwesome name="google" size={20} color="black" />
-        </Pressable>
-        <Button title="Sign in" onPress={onSignInPress} color="cyan" />
-        <View style={styles.signupContainer}>
-          <Text style={styles.bottomText}>Don't have an account?</Text>
-          <Link href="/sign-up" asChild>
-            <Pressable style={styles.signupButton}>
-              <Text style={styles.signupText}>Sign Up</Text>
-            </Pressable>
-          </Link>
-        </View>
-      </SafeAreaView>
+      <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+        <SafeAreaView style={styles.bodyContainer}>
+          <View style={styles.headerContainer}>
+            <Text style={styles.headerText}>
+              Crypto<Text style={{ color: colors.primary.main }}>Graphy</Text>
+            </Text>
+          </View>
+          <Text style={styles.title}>Sign In</Text>
+          <Text style={styles.inputText}>Email</Text>
+          <TextInput
+            style={styles.textInput}
+            autoCapitalize="none"
+            value={emailAddress}
+            placeholder="Enter email"
+            onChangeText={(emailAddress) => setEmailAddress(emailAddress)}
+          />
+          <Text style={styles.inputText}>Password</Text>
+          <TextInput
+            style={styles.textInput}
+            value={password}
+            placeholder="Enter password"
+            secureTextEntry
+            onChangeText={(password) => setPassword(password)}
+          />
+          {error && <Text style={styles.errorMessage}>{error}</Text>}
+          <Pressable style={styles.googleButton} onPress={handleGoogleAuth}>
+            <Text style={styles.signInGoogleText}>Sign in with Google</Text>
+            <FontAwesome name="google" size={20} color="black" />
+          </Pressable>
+          <Button title="Sign in" onPress={onSignInPress} color="cyan" />
+          <View style={styles.signupContainer}>
+            <Text style={styles.bottomText}>Don't have an account?</Text>
+            <Link href="/sign-up" asChild>
+              <Pressable style={styles.signupButton}>
+                <Text style={styles.signupText}>Sign Up</Text>
+              </Pressable>
+            </Link>
+          </View>
+        </SafeAreaView>
+      </KeyboardAvoidingView>
       <StatusBar style="light" />
     </LinearGradient>
   );
@@ -114,6 +123,15 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#121212',
+  },
+  headerContainer: {
+    alignItems: 'center',
+    padding: 5,
+  },
+  headerText: {
+    color: colors.primary.light,
+    fontSize: 40,
+    fontWeight: 'bold',
   },
   title: {
     color: colors.primary.light,

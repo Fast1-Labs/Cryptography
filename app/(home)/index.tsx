@@ -59,12 +59,14 @@ export default function Home() {
           <Text style={styles.header}>
             Cryto<Text style={{ color: colors.primary.main }}>graphy</Text>
           </Text>
-          <View style={styles.greetingContainer}>
-            <Text style={styles.greetingText}>Welcome {user?.firstName}</Text>
-            <Image
-              source={{ uri: user?.imageUrl }}
-              style={{ width: 50, height: 50, borderRadius: 30 }}
-            />
+          <View>
+            <View style={styles.greetingContainer}>
+              <Text style={styles.greetingText}>Welcome {user?.firstName}</Text>
+              <Image
+                source={{ uri: user?.imageUrl }}
+                style={{ width: 50, height: 50, borderRadius: 30 }}
+              />
+            </View>
           </View>
           <View style={styles.topContainer}>
             <Text style={styles.topTitle}>Top Winners Today</Text>
@@ -132,6 +134,12 @@ const styles = StyleSheet.create({
     color: colors.primary.light,
     fontSize: 20,
     fontWeight: 'bold',
+  },
+  balance: {
+    color: colors.primary.light,
+    fontSize: 17,
+    fontWeight: 'semibold',
+    textAlign: 'center',
   },
   topContainer: {
     padding: 10,
