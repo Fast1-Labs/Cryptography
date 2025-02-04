@@ -62,7 +62,7 @@ export default function Home() {
         <SafeAreaView style={{ flex: 1 }}>
           <ScrollView showsVerticalScrollIndicator={false}>
             <Text style={styles.header}>
-              Cryto<Text style={{ color: colors.primary.main }}>graphy</Text>
+              Crypto<Text style={{ color: colors.primary.main }}>graphy</Text>
             </Text>
             <View>
               <View style={styles.greetingContainer}>

@@ -62,6 +62,7 @@ const styles = StyleSheet.create({
     color: colors.primary.light,
     fontWeight: 'bold',
     fontSize: 35,
+    textAlign: 'center',
   },
   button: {
     backgroundColor: colors.primary.main,
