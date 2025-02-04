@@ -1,8 +1,17 @@
+import { useUser } from '@clerk/clerk-expo';
 import { FontAwesome } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect, useState } from 'react';
-import { View, StyleSheet, Text, SafeAreaView, ActivityIndicator, FlatList } from 'react-native';
+import {
+  View,
+  StyleSheet,
+  Text,
+  SafeAreaView,
+  ActivityIndicator,
+  FlatList,
+  Image,
+} from 'react-native';
 import { ScrollView, TextInput } from 'react-native-gesture-handler';
 
 import CoinListItem from '~/components/CoinListItem';
@@ -13,6 +22,7 @@ import { useCoinStore } from '~/store/store';
 export default function Home() {
   const { coins, loading, error, fetchCoins } = useCoinStore();
   const [search, setSearch] = useState('');
+  const { user } = useUser();
 
   useEffect(() => {
     fetchCoins();
@@ -49,6 +59,13 @@ export default function Home() {
           <Text style={styles.header}>
             Cryto<Text style={{ color: colors.primary.main }}>graphy</Text>
           </Text>
+          <View style={styles.greetingContainer}>
+            <Text style={styles.greetingText}>Welcome {user?.firstName}</Text>
+            <Image
+              source={{ uri: user?.imageUrl }}
+              style={{ width: 50, height: 50, borderRadius: 30 }}
+            />
+          </View>
           <View style={styles.topContainer}>
             <Text style={styles.topTitle}>Top Winners Today</Text>
             <FlatList
@@ -98,6 +115,23 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#000000',
+  },
+  greetingContainer: {
+    padding: 20,
+    shadowColor: colors.primary.dark,
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.5,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  greetingText: {
+    color: colors.primary.light,
+    fontSize: 20,
+    fontWeight: 'bold',
   },
   topContainer: {
     padding: 10,

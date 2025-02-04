@@ -3,7 +3,7 @@ export interface Coin {
   name: string;
   symbol: string;
   price_usd: number;
-  change_24h: number;
+  change_24h: string;
   market_cap?: number;
   volume_24h?: number;
   coin_id: string;
