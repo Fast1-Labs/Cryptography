@@ -1,4 +1,3 @@
-import { FontAwesome } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useState } from 'react';
 import {
@@ -10,6 +9,7 @@ import {
   ScrollView,
   ActivityIndicator,
   Button,
+  SafeAreaView,
 } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
 
@@ -18,11 +18,11 @@ import { useCryptoAdvisor } from '~/utils/aiAdvisor';
 
 export default function Assistant() {
   const [input, setInput] = useState('');
-  const { messages, loading, error, askCryptoAdvisor } = useCryptoAdvisor();
+  const { messages, loading, error, askToCryptoAdvisor } = useCryptoAdvisor();
 
   const handleAssistant = () => {
     if (input.trim()) {
-      askCryptoAdvisor(input);
+      askToCryptoAdvisor(input);
       setInput('');
     }
   };
@@ -31,7 +31,7 @@ export default function Assistant() {
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={{ flex: 1 }}>
-        <View style={{ flex: 1, padding: 16 }}>
+        <SafeAreaView style={{ flex: 1, padding: 16, margin: 10 }}>
           <ScrollView style={{ flex: 1 }} contentContainerStyle={{ paddingBottom: 20 }}>
             {messages.map((msg, index) => (
               <View
@@ -77,7 +77,7 @@ export default function Assistant() {
             />
             <Button title="Send" onPress={handleAssistant} disabled={loading} />
           </View>
-        </View>
+        </SafeAreaView>
       </KeyboardAvoidingView>
     </LinearGradient>
   );
