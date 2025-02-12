@@ -60,7 +60,7 @@ export default function Assistant() {
               flexDirection: 'row',
               alignItems: 'center',
               padding: 10,
-              backgroundColor: '#FFF',
+              backgroundColor: colors.primary.light,
               borderRadius: 10,
             }}>
             <TextInput
