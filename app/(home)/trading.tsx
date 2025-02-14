@@ -74,15 +74,17 @@ export default function Details() {
 
   if (error)
     return (
-      <SafeAreaView>
-        <Text
-          style={{
-            color: 'red',
-            alignSelf: 'center',
-          }}>
-          Failed to fetch historical coin data
-        </Text>
-      </SafeAreaView>
+      <LinearGradient style={styles.container} colors={['#3E1D92', '#1B1030', '#000000']}>
+        <SafeAreaView>
+          <Text
+            style={{
+              color: 'red',
+              alignSelf: 'center',
+            }}>
+            Failed to fetch historical coin data
+          </Text>
+        </SafeAreaView>
+      </LinearGradient>
     );
 
   return (

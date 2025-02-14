@@ -32,7 +32,11 @@ export default function Assistant() {
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={{ flex: 1 }}>
         <SafeAreaView style={{ flex: 1, padding: 16, margin: 10 }}>
-          <ScrollView style={{ flex: 1 }} contentContainerStyle={{ paddingBottom: 20 }}>
+          <Text style={styles.header}>FinancAI Assistant</Text>
+          <ScrollView
+            style={{ flex: 1 }}
+            contentContainerStyle={{ paddingBottom: 20 }}
+            showsVerticalScrollIndicator={false}>
             {messages.map((msg, index) => (
               <View
                 key={index}
@@ -88,13 +92,11 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#000000',
   },
-  headerContainer: {
-    padding: 20,
-  },
   header: {
     color: colors.primary.dark,
     fontWeight: 'bold',
     fontSize: 25,
+    padding: 10,
   },
   messageContainer: {
     padding: 10,
