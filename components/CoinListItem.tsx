@@ -14,11 +14,11 @@ export default function CoinListItem({ coin }: { coin: Coin }) {
           <Text style={styles.coinName}>{coin.name}</Text>
           <Text
             style={[
-              coin.change_24h > 0
+              parseFloat(coin.change_24h) > 0
                 ? { color: colors.secondary.main }
                 : { color: colors.secondary.accent },
             ]}>
-            % {coin.change_24h.toFixed(5)}
+            % {parseFloat(coin.change_24h).toFixed(5)}
           </Text>
         </View>
         <View style={styles.priceContainer}>
