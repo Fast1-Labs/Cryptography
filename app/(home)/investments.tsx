@@ -168,9 +168,12 @@ export default function InvestmentsScreen() {
               <Text style={styles.coinText}>$ {coin.price_usd.toFixed(4)}</Text>
               <Text
                 style={{
-                  color: coin.change_24h > 0 ? colors.secondary.main : colors.secondary.accent,
+                  color:
+                    parseFloat(coin.change_24h) > 0
+                      ? colors.secondary.main
+                      : colors.secondary.accent,
                 }}>
-                % {coin.change_24h.toFixed(4)}
+                % {parseFloat(coin.change_24h).toFixed(4)}
               </Text>
               <TextInput
                 value={quantity}

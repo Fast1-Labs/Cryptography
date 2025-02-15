@@ -1,5 +1,6 @@
 import { useUser } from '@clerk/clerk-expo';
 import { FontAwesome } from '@expo/vector-icons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { LinearGradient } from 'expo-linear-gradient';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect, useState } from 'react';
@@ -19,15 +20,17 @@ import { ScrollView, TextInput } from 'react-native-gesture-handler';
 import CoinListItem from '~/components/CoinListItem';
 import Top5 from '~/components/Top5';
 import { colors } from '~/constants/colors';
-import { useCoinStore } from '~/store/store';
+import { Coin, useCoinStore } from '~/store/store';
 
 export default function Home() {
   const { coins, loading, error, fetchCoins } = useCoinStore();
   const [search, setSearch] = useState('');
   const { user } = useUser();
+  const [wallet, setWallet] = useState<Coin[] | []>([]);
 
   useEffect(() => {
     fetchCoins();
+    fetchInvestments();
   }, []);
 
   if (loading)
@@ -53,6 +56,31 @@ export default function Home() {
           coin.symbol.toLowerCase().includes(search.toLowerCase())
       )
     : coins;
+
+  const fetchInvestments = async () => {
+    try {
+      const data = await AsyncStorage.getItem('investments');
+      const investments = data ? JSON.parse(data) : [];
+
+      const updatedInvestments = investments.map((investment: any) => {
+        const realTimeCoin = coins.find((coin) => coin.id === investment.coin_id);
+        return {
+          ...investment,
+          price_usd: realTimeCoin ? realTimeCoin.price_usd : investment.price_usd,
+        };
+      });
+
+      setWallet(updatedInvestments);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const calculateTotalBalance = () => {
+    return wallet
+      .reduce((total, item) => total + parseFloat(item.quantity) * item.price_usd, 0)
+      .toFixed(2);
+  };
 
   return (
     <LinearGradient style={styles.container} colors={['#3E1D92', '#1B1030', '#000000']}>
