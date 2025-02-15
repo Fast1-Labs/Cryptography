@@ -100,6 +100,11 @@ export default function Home() {
                   style={{ width: 50, height: 50, borderRadius: 30 }}
                 />
               </View>
+              <View style={styles.balanceContainer}>
+                <Text style={styles.balanceText}>
+                  Your Total Balance: $ {calculateTotalBalance()}
+                </Text>
+              </View>
             </View>
             <View style={styles.topContainer}>
               <Text style={styles.topTitle}>Top Winners Today</Text>
@@ -163,6 +168,18 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+  },
+  balanceContainer: {
+    padding: 10,
+    alignItems: 'center',
+    borderWidth: 0.5,
+    borderColor: 'white',
+    margin: 10,
+  },
+  balanceText: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: colors.primary.light,
   },
   greetingText: {
     color: colors.primary.light,
