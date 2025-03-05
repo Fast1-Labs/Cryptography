@@ -12,7 +12,6 @@ import {
   Pressable,
   TextInput,
   Modal,
-  Dimensions,
   StatusBar,
   Platform,
 } from 'react-native';
@@ -337,7 +336,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     borderColor: 'gainsboro',
     margin: 10,
-    height: Dimensions.get('window').height / 10,
+    //height: Dimensions.get('window').height / 8,
     gap: 20,
     alignItems: 'center',
   },
