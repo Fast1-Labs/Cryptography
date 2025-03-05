@@ -1,5 +1,5 @@
 import { useAuth } from '@clerk/clerk-expo';
-import { FontAwesome, FontAwesome5 } from '@expo/vector-icons';
+import { FontAwesome } from '@expo/vector-icons';
 import { Redirect } from 'expo-router';
 import { Tabs } from 'expo-router/tabs';
 
@@ -39,13 +39,6 @@ export default function Layout() {
         options={{
           title: 'Trading',
           tabBarIcon: ({ color }) => <FontAwesome name="money" size={25} color={color} />,
-        }}
-      />
-      <Tabs.Screen
-        name="assistant"
-        options={{
-          title: 'Finance Assistant',
-          tabBarIcon: ({ color }) => <FontAwesome5 name="robot" color={color} size={25} />,
         }}
       />
       <Tabs.Screen
