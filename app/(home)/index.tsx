@@ -2,7 +2,6 @@ import { useUser } from '@clerk/clerk-expo';
 import { FontAwesome } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { LinearGradient } from 'expo-linear-gradient';
-import { StatusBar } from 'expo-status-bar';
 import { useEffect, useState } from 'react';
 import {
   View,
@@ -14,6 +13,7 @@ import {
   Image,
   KeyboardAvoidingView,
   Platform,
+  StatusBar,
 } from 'react-native';
 import { ScrollView, TextInput } from 'react-native-gesture-handler';
 
@@ -87,7 +87,8 @@ export default function Home() {
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={{ flex: 1 }}>
-        <SafeAreaView style={{ flex: 1 }}>
+        <SafeAreaView
+          style={{ flex: 1, paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0 }}>
           <ScrollView showsVerticalScrollIndicator={false}>
             <Text style={styles.header}>
               Crypto<Text style={{ color: colors.primary.main }}>graphy</Text>
@@ -144,7 +145,7 @@ export default function Home() {
                 renderItem={({ item }) => <CoinListItem coin={item} />}
               />
             </View>
-            <StatusBar style="light" />
+            <StatusBar barStyle="light-content" />
           </ScrollView>
         </SafeAreaView>
       </KeyboardAvoidingView>

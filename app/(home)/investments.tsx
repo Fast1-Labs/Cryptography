@@ -13,6 +13,8 @@ import {
   TextInput,
   Modal,
   Dimensions,
+  StatusBar,
+  Platform,
 } from 'react-native';
 
 import { colors } from '~/constants/colors';
@@ -144,7 +146,8 @@ export default function InvestmentsScreen() {
   return (
     <View style={styles.container}>
       <LinearGradient style={styles.container} colors={['#3E1D92', '#1B1030', '#000000']}>
-        <SafeAreaView>
+        <SafeAreaView
+          style={{ paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0 }}>
           {/* Header Title */}
           <Text style={styles.headerTitle}>My Investments</Text>
           {/* Coin add search */}

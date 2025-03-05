@@ -10,6 +10,7 @@ import {
   ActivityIndicator,
   Button,
   SafeAreaView,
+  StatusBar,
 } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
 
@@ -31,7 +32,13 @@ export default function Assistant() {
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={{ flex: 1 }}>
-        <SafeAreaView style={{ flex: 1, padding: 16, margin: 10 }}>
+        <SafeAreaView
+          style={{
+            flex: 1,
+            padding: 16,
+            margin: 10,
+            paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
+          }}>
           <Text style={styles.header}>FinancAI Assistant</Text>
           <ScrollView
             style={{ flex: 1 }}

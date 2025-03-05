@@ -2,7 +2,17 @@ import { useClerk, useUser } from '@clerk/clerk-expo';
 import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
 import { useState } from 'react';
-import { Alert, Button, SafeAreaView, StyleSheet, Text, View, Image } from 'react-native';
+import {
+  Alert,
+  Button,
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  Platform,
+  StatusBar,
+} from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
 
 import { colors } from '~/constants/colors';
@@ -51,7 +61,7 @@ export default function ProfileScreen() {
 
   return (
     <LinearGradient style={styles.container} colors={['#3E1D92', '#1B1030', '#000000']}>
-      <SafeAreaView>
+      <SafeAreaView style={{ paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0 }}>
         <Text style={styles.title}>Profile</Text>
         {user?.imageUrl && <Image source={{ uri: user?.imageUrl }} style={styles.image} />}
         <View style={styles.infoContainer}>

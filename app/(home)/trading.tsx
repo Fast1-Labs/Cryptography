@@ -12,6 +12,8 @@ import {
   Pressable,
   TouchableOpacity,
   Modal,
+  Platform,
+  StatusBar,
 } from 'react-native';
 import { LineGraph, GraphPoint } from 'react-native-graph';
 
@@ -75,7 +77,8 @@ export default function Details() {
   if (error)
     return (
       <LinearGradient style={styles.container} colors={['#3E1D92', '#1B1030', '#000000']}>
-        <SafeAreaView>
+        <SafeAreaView
+          style={{ paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0 }}>
           <Text
             style={{
               color: 'red',
