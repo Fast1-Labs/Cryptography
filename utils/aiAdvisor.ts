@@ -1,9 +1,12 @@
 import { useState } from 'react';
 
+import { useCoinStore } from '~/store/store';
+
 export const useCryptoAdvisor = () => {
   const [messages, setMessages] = useState<{ role: string; content: string }[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const { coins } = useCoinStore();
 
   const askToCryptoAdvisor = async (userQuery: string) => {
     if (!userQuery) return;
@@ -12,6 +15,25 @@ export const useCryptoAdvisor = () => {
 
     try {
       setMessages((prev) => [...prev, { role: 'user', content: userQuery }]);
+
+      const coinDataText = coins
+        .slice(0, 10)
+        .map((coin) => `${coin.name} (${coin.symbol}): $${coin.price_usd.toFixed(2)}`)
+        .join('\n');
+
+      const systemPrompt = `
+      You are a cryptocurrency financial advisor and trading expert. 
+      Your role is to provide **insightful, up-to-date** information on:
+      - Bitcoin, Ethereum, and major altcoins.
+      - DeFi, NFTs, and blockchain technology.
+      - Trading strategies, technical & fundamental analysis.
+      - Risk management, market trends, and price predictions.
+
+      **Latest Market Data:**
+      ${coinDataText}
+
+      **Important:** If a user asks for real-time prices or news, inform them that the data is updated periodically. Suggest checking CoinGecko, CoinMarketCap, or Binance for live updates.
+      `;
 
       const response = await fetch('https://api.openai.com/v1/chat/completions', {
         method: 'POST',
@@ -22,17 +44,7 @@ export const useCryptoAdvisor = () => {
         body: JSON.stringify({
           model: 'gpt-4',
           messages: [
-            {
-              role: 'system',
-              content: `You are a cryptocurrency financial advisor and trading expert. 
-              Your role is to provide **insightful, up-to-date** information on:
-              - Bitcoin, Ethereum, and major altcoins.
-              - DeFi, NFTs, and blockchain technology.
-              - Trading strategies, technical & fundamental analysis.
-              - Risk management, market trends, and price predictions.
-
-              **Important:** If a user asks for real-time prices or news, inform them that you do not have live data, but suggest trusted sources like CoinGecko, CoinMarketCap, or Binance.`,
-            },
+            { role: 'system', content: systemPrompt },
             ...messages,
             { role: 'user', content: userQuery },
           ],
