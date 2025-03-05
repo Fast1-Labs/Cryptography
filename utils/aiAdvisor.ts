@@ -20,18 +20,24 @@ export const useCryptoAdvisor = () => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          model: 'gpt-3.5-turbo',
+          model: 'gpt-4',
           messages: [
             {
               role: 'system',
-              content:
-                'You are a highly knowledgeable cryptocurrency financial advisor. Your job is to provide expert insights on cryptocurrency markets, trading strategies, investment opportunities, and risk management. Keep responses clear, professional, and informative.',
+              content: `You are a cryptocurrency financial advisor and trading expert. 
+              Your role is to provide **insightful, up-to-date** information on:
+              - Bitcoin, Ethereum, and major altcoins.
+              - DeFi, NFTs, and blockchain technology.
+              - Trading strategies, technical & fundamental analysis.
+              - Risk management, market trends, and price predictions.
+
+              **Important:** If a user asks for real-time prices or news, inform them that you do not have live data, but suggest trusted sources like CoinGecko, CoinMarketCap, or Binance.`,
             },
             ...messages,
             { role: 'user', content: userQuery },
           ],
-          temperature: 0.7,
-          max_tokens: 200,
+          temperature: 0.6,
+          max_tokens: 300,
         }),
       });
 
