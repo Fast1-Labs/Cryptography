@@ -4,7 +4,6 @@ import { router } from 'expo-router';
 import { useState } from 'react';
 import {
   Alert,
-  Button,
   SafeAreaView,
   StyleSheet,
   Text,
@@ -15,6 +14,7 @@ import {
 } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
 
+import { Button } from '~/components/Button';
 import { colors } from '~/constants/colors';
 
 export default function ProfileScreen() {
@@ -106,19 +106,15 @@ export default function ProfileScreen() {
         </View>
 
         <View style={styles.buttonContainer}>
-          <Button
-            title="Update Password"
-            onPress={handleChangePassword}
-            color={colors.primary.light}
-          />
+          <Button title="Update Password" onPress={handleChangePassword} />
         </View>
 
         <View style={styles.buttonContainer}>
-          <Button title="Delete User" onPress={handleDeleteUser} color="red" />
+          <Button title="Delete User" onPress={handleDeleteUser} />
         </View>
 
         <View style={styles.buttonContainer}>
-          <Button title="Sign Out" onPress={() => signOut()} color={colors.primary.light} />
+          <Button title="Sign Out" onPress={() => signOut()} />
         </View>
       </SafeAreaView>
     </LinearGradient>
@@ -172,5 +168,6 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     marginVertical: 10,
+    paddingHorizontal: 20,
   },
 });

@@ -93,7 +93,7 @@ export default function Details() {
   return (
     <LinearGradient style={styles.container} colors={['#3E1D92', '#1B1030', '#000000']}>
       <SafeAreaView>
-        <Text style={styles.title}>Trading</Text>
+        <Text style={styles.title}>Coin Graphs</Text>
         <FlatList
           data={coins}
           renderItem={({ item }) => (
