@@ -12,8 +12,8 @@ import {
   Pressable,
   TouchableOpacity,
   Modal,
-  Platform,
   StatusBar,
+  Platform,
 } from 'react-native';
 import { LineGraph, GraphPoint } from 'react-native-graph';
 
@@ -22,7 +22,7 @@ import { colors } from '~/constants/colors';
 import { useCoinStore } from '~/store/store';
 
 export default function Details() {
-  const { historicalData, loading, error, fetchHistoricalData } = useCoinStore();
+  const { historicalData, loading, fetchHistoricalData } = useCoinStore();
   const { coins, fetchCoins } = useCoinStore();
   const [selectedCoin, setSelectedCoin] = useState('bitcoin');
   const [days, setDays] = useState(30);
@@ -44,14 +44,16 @@ export default function Details() {
   }, [selectedCoin]);
 
   const data = historicalData[selectedCoin] || [];
-  const graphData = data
-    .map((point) => ({
-      x: new Date(point.timestamp).getTime(),
-      y: point.value,
-      value: point.value,
-      date: new Date(point.timestamp),
-    }))
-    .filter((point) => !isNaN(point.x) && !isNaN(point.y));
+  const graphData = Array.isArray(data)
+    ? data
+        .map((point) => ({
+          x: new Date(point?.timestamp)?.getTime(),
+          y: point?.value ?? 0,
+          value: point?.value ?? 0,
+          date: new Date(point?.timestamp),
+        }))
+        .filter((point) => !isNaN(point.x) && !isNaN(point.y))
+    : [];
 
   const onPointSelected = (point: GraphPoint) => {
     setSelectedPoint(point);
@@ -74,25 +76,9 @@ export default function Details() {
       />
     );
 
-  if (error)
-    return (
-      <LinearGradient style={styles.container} colors={['#3E1D92', '#1B1030', '#000000']}>
-        <SafeAreaView
-          style={{ paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0 }}>
-          <Text
-            style={{
-              color: 'red',
-              alignSelf: 'center',
-            }}>
-            Failed to fetch historical coin data
-          </Text>
-        </SafeAreaView>
-      </LinearGradient>
-    );
-
   return (
     <LinearGradient style={styles.container} colors={['#3E1D92', '#1B1030', '#000000']}>
-      <SafeAreaView>
+      <SafeAreaView style={{ paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0 }}>
         <Text style={styles.title}>Coin Graphs</Text>
         <FlatList
           data={coins}
@@ -124,7 +110,7 @@ export default function Details() {
             onPointSelected={onPointSelected}
           />
         ) : (
-          <Text style={styles.noDataText}>No data available</Text>
+          <Text style={styles.noDataText}>No data available for selected coin !</Text>
         )}
         <View style={styles.coinInfoContainer}>
           <Text style={styles.bodyText}>
@@ -136,13 +122,13 @@ export default function Details() {
           {/* Coin Information */}
           <Text style={styles.sectionTitle}>Coin Details</Text>
           <Text style={styles.informationText}>
-            High: ${Math.max(...graphData.map((point) => point.value)).toFixed(2) || '--'}
+            High: $ {Math.max(...graphData.map((point) => point.value)).toFixed(2) || '--'}
           </Text>
           <Text style={styles.informationText}>
-            Low: ${Math.min(...graphData.map((point) => point.value)).toFixed(2) || '--'}
+            Low: $ {Math.min(...graphData.map((point) => point.value)).toFixed(2) || '--'}
           </Text>
           <Text style={styles.informationText}>
-            Average: $
+            Average: ${' '}
             {(graphData.reduce((sum, point) => sum + point.value, 0) / graphData.length).toFixed(
               2
             ) || '--'}
