@@ -139,8 +139,24 @@ export default function InvestmentsScreen() {
       .toFixed(2);
   };
 
-  if (loading) return <ActivityIndicator size="large" color={colors.primary.light} />;
-  if (error) return <Text style={styles.errorText}>{error}</Text>;
+  if (loading)
+    return (
+      <LinearGradient style={styles.container} colors={['#3E1D92', '#1B1030', '#000000']}>
+        <SafeAreaView
+          style={{ paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0 }}>
+          <ActivityIndicator size="large" color={colors.primary.light} />
+        </SafeAreaView>
+      </LinearGradient>
+    );
+  if (error)
+    return (
+      <LinearGradient style={styles.container} colors={['#3E1D92', '#1B1030', '#000000']}>
+        <SafeAreaView
+          style={{ paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0 }}>
+          <Text style={styles.errorText}>{error}</Text>
+        </SafeAreaView>
+      </LinearGradient>
+    );
 
   return (
     <View style={styles.container}>

@@ -35,11 +35,16 @@ export default function Home() {
 
   if (loading)
     return (
-      <ActivityIndicator
-        style={{ alignSelf: 'center', justifyContent: 'center', flex: 1 }}
-        size="large"
-        color={colors.primary.main}
-      />
+      <LinearGradient style={styles.container} colors={['#3E1D92', '#1B1030', '#000000']}>
+        <SafeAreaView
+          style={{ flex: 1, paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0 }}>
+          <ActivityIndicator
+            style={{ alignSelf: 'center', justifyContent: 'center', flex: 1 }}
+            size="large"
+            color={colors.primary.main}
+          />
+        </SafeAreaView>
+      </LinearGradient>
     );
   if (error) return <Text>Failed while fetching coins</Text>;
 

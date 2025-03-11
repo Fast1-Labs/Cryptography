@@ -69,11 +69,17 @@ export default function Details() {
   };
   if (loading)
     return (
-      <ActivityIndicator
-        size="large"
-        color={colors.primary.main}
-        style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
-      />
+      <LinearGradient style={styles.container} colors={['#3E1D92', '#1B1030', '#000000']}>
+        <SafeAreaView
+          style={{ paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0 }}>
+          <Text style={styles.title}>Coin Graphs</Text>
+          <ActivityIndicator
+            size="large"
+            color={colors.primary.main}
+            style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
+          />
+        </SafeAreaView>
+      </LinearGradient>
     );
 
   return (
