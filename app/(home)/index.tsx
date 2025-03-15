@@ -94,24 +94,24 @@ export default function Home() {
         style={{ flex: 1 }}>
         <SafeAreaView
           style={{ flex: 1, paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0 }}>
-          <ScrollView showsVerticalScrollIndicator={false}>
-            <Text style={styles.header}>
-              Crypto<Text style={{ color: colors.primary.main }}>graphy</Text>
-            </Text>
-            <View>
-              <View style={styles.greetingContainer}>
-                <Text style={styles.greetingText}>Welcome {user?.firstName}</Text>
-                <Image
-                  source={{ uri: user?.imageUrl }}
-                  style={{ width: 50, height: 50, borderRadius: 30 }}
-                />
-              </View>
-              <View style={styles.balanceContainer}>
-                <Text style={styles.balanceText}>
-                  Your Total Balance: $ {calculateTotalBalance()}
-                </Text>
-              </View>
+          <Text style={styles.header}>
+            Crypto<Text style={{ color: colors.primary.main }}>graphy</Text>
+          </Text>
+          <View>
+            <View style={styles.greetingContainer}>
+              <Text style={styles.greetingText}>Welcome {user?.firstName}</Text>
+              <Image
+                source={{ uri: user?.imageUrl }}
+                style={{ width: 50, height: 50, borderRadius: 30 }}
+              />
             </View>
+            <View style={styles.balanceContainer}>
+              <Text style={styles.balanceText}>
+                Your Total Balance: $ {calculateTotalBalance()}
+              </Text>
+            </View>
+          </View>
+          <ScrollView showsVerticalScrollIndicator={false}>
             <View style={styles.topContainer}>
               <Text style={styles.topTitle}>Top Winners Today</Text>
               <FlatList
