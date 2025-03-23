@@ -184,21 +184,12 @@ export default function InvestmentsScreen() {
               <Text style={styles.coinText}>{coin.symbol}</Text>
               <Text style={styles.coinText}>{coin.name}</Text>
               <Text style={styles.coinText}>$ {coin.price_usd.toFixed(4)}</Text>
-              <Text
-                style={{
-                  color:
-                    parseFloat(coin.change_24h) > 0
-                      ? colors.secondary.main
-                      : colors.secondary.accent,
-                }}>
-                % {parseFloat(coin.change_24h).toFixed(4)}
-              </Text>
               <TextInput
                 value={quantity}
                 onChangeText={setQuantity}
                 placeholder="0"
                 placeholderTextColor="white"
-                keyboardType="numeric"
+                keyboardType="numbers-and-punctuation"
                 style={styles.quantityInput}
               />
               <Pressable style={styles.addButton} onPress={addToWallet}>

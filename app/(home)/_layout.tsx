@@ -28,6 +28,13 @@ export default function Layout() {
         }}
       />
       <Tabs.Screen
+        name="news"
+        options={{
+          title: 'News',
+          tabBarIcon: ({ color }) => <FontAwesome name="newspaper-o" size={25} color={color} />,
+        }}
+      />
+      <Tabs.Screen
         name="investments"
         options={{
           title: 'Investments',
